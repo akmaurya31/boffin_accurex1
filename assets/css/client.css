@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+body {
+    background: #0002390d;
+    font-family: 'Roboto';
+    font-size: 14px;
+}
+.nav-link {
+    font-weight: 600;
+    color: #14264d;
+    font-family: 'Roboto';
+    font-size: 15px;
+    letter-spacing: .5px;
+}
+
+.success-badge {
+    background: linear-gradient(45deg, #007229b8, transparent);
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Roboto';
+}
+.danger-badge {
+    background: linear-gradient(45deg, #ff000094, transparent);
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Roboto';
+}
+.warning-badge {
+    background: linear-gradient(45deg, #ffc1077a, transparent);
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Roboto';
+}
+.form-control{
+    font-size: 14px!important;
+}
