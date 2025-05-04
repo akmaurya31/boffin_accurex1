@@ -231,6 +231,9 @@
         
         public function fetch_paginated_jobs() 
         {
+            $sessionData = $this->session->userdata('accurexClientLoginDetails');
+        
+            
             $limit = $this->input->get('limit') ?? 20;
             $page = $this->input->get('page') ?? 1;
             $offset = ($page - 1) * $limit;
@@ -251,7 +254,8 @@
             $filters = [
                 'search_code' => $search_code,
                 'search_name' => $search_name,
-                'status' => $status
+                'status' => $status,
+                
             ];
 
             $total = 0;

@@ -141,9 +141,10 @@ class Client_model extends CI_Model {
     public function extra_get_filtered_jobs($limit, $offset, $filters, &$total = 0) {
         // Total count query (without limit)
         $this->db->from('joblist');
-
-      
-
+        $sessionData = $this->session->userdata('accurexClientLoginDetails');
+        
+        $this->db->like('user_id', $sessionData->user_ID);
+       
         if (!empty($filters['search_code'])) {
             $label=$filters['search_code'];
             if ($label === 'Year End Account' || $label === 'YE' ) {
@@ -184,6 +185,7 @@ class Client_model extends CI_Model {
         // Now run the actual query with limit
         $this->db->select('*');
         $this->db->from('joblist');
+        $this->db->like('user_id', $sessionData->user_ID);
     
         if (!empty($filters['search_code'])) {
             $this->db->group_start();  

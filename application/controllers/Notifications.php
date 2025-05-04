@@ -38,7 +38,9 @@ class Notifications extends CI_Controller
     public function load_notifications()
 {
     // Dummy client ID (replace with session or actual client ID logic)
-    $client_id = 1;
+    $sessionData = $this->session->userdata('accurexClientLoginDetails');
+    $client_id = $sessionData->user_ID;
+    
 
     // Get page number from query string (default is 1)
     $page = $this->input->get('page') ?? 1;

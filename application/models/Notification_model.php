@@ -19,6 +19,8 @@ class Notification_model extends CI_Model
     public function get_notifications_by_client($client_id, $limit = 20, $offset = 0)
     {
         // Main query to get notifications with job details
+        $sessionData = $this->session->userdata('accurexClientLoginDetails');
+
         $this->db->select('job_notifications.id as notif_id, joblist.id as job_id,job_notifications.*, joblist.*');
         $this->db->from('job_notifications');
         $this->db->join('joblist', 'joblist.jobcode = job_notifications.jobcode', 'inner');
