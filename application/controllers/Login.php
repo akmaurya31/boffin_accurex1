@@ -298,6 +298,8 @@ class Login extends CI_Controller
             'personal_contact'  => $this->input->post('PersonalContact'),
             'gender'            => $this->input->post('Gender'),
             'dob'               => $this->input->post('dob'),
+            'firm_name'         => $this->input->post('firm_name'),
+            'firm_address'      => $this->input->post('firm_address'),
         ];
 
         $user = $this->session->userdata('accurexClientLoginDetails');

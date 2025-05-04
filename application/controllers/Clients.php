@@ -361,6 +361,7 @@
             ]);
         }
         private function generate_job_title($client_name, $assignment_type,$year_end,$created_date) {
+            $sessionUser = $this->session->userdata('accurexClientLoginDetails'); 
             $short_type = strtoupper(substr($assignment_type, 0, 3));
             if ($short_type === 'BOO') {
                 $final_type     = 'VAT';
@@ -378,8 +379,9 @@
                 $final_type     = 'OTH';
                 $formatted_date = date('d-m-Y', strtotime($created_date));
             }
-            $FirstNameLastName="RS";
-            return "{$client_name}-{$final_type}-{$formatted_date}($FirstNameLastName)";
+            // $FirstNameLastName="RS";
+            $letters=getsortname($sessionUser->full_name);
+            return "{$client_name}-{$final_type}-{$formatted_date}($letters)";
         }
         
         

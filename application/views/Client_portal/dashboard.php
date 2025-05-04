@@ -141,15 +141,174 @@
 
 </div>
 
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #14264d; color: white;">
+        <h3>Monthly Job Summary  </h3></div>
 		<div id="jobChart1">
 			<select id="yearFilter" onchange="loadChart(this.value)">
 				<!-- Years will be added dynamically by JS -->
 			</select>
 		</div>
 		<div id="jobChart"></div>
+    </div>
 	
 	</div>  
 	
+
+    <div class="container py-4">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #14264d; color: white;">
+    <h3>Job Turnaround Time</h3>
+    <div>
+      <label for="year">Year</label>
+      <select id="year">
+        <option value="2019" selected>2019</option>
+        <option value="2020">2020</option>
+        <option value="2021">2021</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="jtt_chart" style="padding: 10px;"></div>
+
+  <script>
+    const jtt_options = {
+      chart: {
+        type: 'bar',
+        height: 350,
+        toolbar: { show: false }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '55%',
+          endingShape: 'flat'
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        show: true,
+        width: 1,
+        colors: ['transparent']
+      },
+      xaxis: {
+        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      yaxis: {
+        title: {
+          text: 'Days'
+        },
+        min: 0,
+        max: 12
+      },
+      fill: {
+        opacity: 1,
+        colors: ['#81d4fa', '#f8bbd0', '#ffe0b2'] // light blue, pink, light orange
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val + " days";
+          }
+        }
+      },
+      legend: {
+        position: 'bottom'
+      },
+      series: [
+        {
+          name: 'Bookkeeping / VAT',
+          data: [3, 3, 4, 3, 2, 3, 4, 4, 3, 3, 5]
+        },
+        {
+          name: 'Year end account',
+          data: [3, 3, 2, 2, 3, 4, 5, 5, 5, 4, 3]
+        },
+        {
+          name: 'Tax return',
+          data: [3, 3, 1, 1, 2, 3, 4, 6, 10, 2, 3]
+        }
+      ]
+    };
+
+    const jtt_chart = new ApexCharts(document.querySelector("#jtt_chart"), jtt_options);
+    jtt_chart.render();
+  </script>
+    </div>  
+
+
+
+    <div class="container py-4">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #14264d; color: white;">
+    <h3>Margin</h3>
+    <div>
+      <label for="year">Year</label>
+      <select id="year">
+        <option value="2025" selected>2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="chart" style="padding: 10px;"></div>
+  </div>
+
+  <script>
+    const Margin_options = {
+      chart: {
+        type: 'bar',
+        height: 350,
+        toolbar: { show: false }
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '55%',
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent']
+      },
+      xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      yaxis: {
+        title: {
+          text: 'Margin %'
+        },
+        max: 80
+      },
+      fill: {
+        opacity: 1,
+        colors: ['#81d4fa']
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val + "%";
+          }
+        }
+      },
+      series: [{
+        name: 'Margin',
+        data: [67, 62, 64, 66, 71, 69, 72, 73, 68, 70, 67, 65]
+      }]
+    };
+
+    const Marginchart = new ApexCharts(document.querySelector("#chart"), Margin_options);
+    Marginchart.render();
+  </script>
+
 
 
 
@@ -290,7 +449,7 @@ $(document).ready(function() {
     // Data values
 	 
 	var dataValues = [<?= $chart['on_hold'] ?>, <?= $chart['completed'] ?>, <?= $chart['current'] ?>];
-	var fruitNames = ['On Hold', 'Completed', 'Current'];
+	var fruitNames = ['On Hold', 'Completed', 'In Progress'];
 
     // Labels with value appended: Apple (44), etc.
     var labelsWithValues = fruitNames.map((name, index) => `${name} (${dataValues[index]})`);
@@ -339,11 +498,15 @@ function loadChart(year) {
                     data: data.bookkeeping ? Object.values(data.bookkeeping) : []
                 },
                 {
-                    name: 'Year End Account',
+                    name: 'Year End Accounts',
                     data: data.year_end_account ? Object.values(data.year_end_account) : []
                 },
                 {
                     name: 'Personal Tax Return',
+                    data: data.personal_tax_return ? Object.values(data.personal_tax_return) : []
+                },
+                {
+                    name: 'Other',
                     data: data.personal_tax_return ? Object.values(data.personal_tax_return) : []
                 }
             ];
@@ -361,8 +524,8 @@ function loadChart(year) {
                 plotOptions: {
                     bar: {
                         horizontal: false,
-                        columnWidth: '95%',
-                        borderRadius: 5
+                        columnWidth: '75%',
+                        borderRadius: 1
                     }
                 },
                 dataLabels: {
@@ -373,7 +536,7 @@ function loadChart(year) {
                         colors: ['#000']
                     }
                 },
-                colors: ['#f65d1f', '#28a745', '#14264d'],
+                colors: ['#f65d1f', '#28a745', '#edb743', '#72deed'],
                 legend: {
                     position: 'top'
                 },

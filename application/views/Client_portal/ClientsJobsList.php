@@ -132,6 +132,13 @@
         color: #14264e;
     }
 </style>
+<script>
+    function convertKBtoMB(kb) {
+        const mb = kb / 1024;
+        return mb.toFixed(2) + ' MB';
+    }
+
+</script>
 <?php include('navigation.php');?>
 <div id="toast" class="toast-msg" style="display: none;">Form submitted successfully!</div>
 <div class="page-content">
@@ -334,14 +341,14 @@
                   <td class="m_client"></td>
                 </tr>
                 <tr>
-                  <th>Contact person Name:</th>
+                  <th>Contact Name:</th>
                   <td class="m_person"></td>
                 </tr>
                 <tr>
                   <th>Email:</th>
                   <td class="m_email"></td>
                 </tr>
-                <tr>
+                <tr class="otherTaxyear fldother">
                   <th>Tax Year:</th>
                   <td class="m_taxyear"></td>
                 </tr>
@@ -349,11 +356,11 @@
                   <th>Budgeted hours:</th>
                   <td class="m_budget"></td>
                 </tr>
-                <tr>
+                <tr class="otherAccountancy fldother">
                   <th>Accountancy Fees (Net):</th>
                   <td class="m_fee"></td>
                 </tr>
-                <tr>
+                <tr class="otherAccountancy fldother">
                   <th>Additional Comments:</th>
                   <td class="m_comments"></td>
                 </tr>
@@ -614,6 +621,13 @@ function CshowPreviewModal(rs) {
         'other':               'Other'
     };
 
+    // Inject into your modal
+    if (rs.job.assignment_type === 'other') {
+        $('.fldother').hide();
+    }else{
+        $('.fldother').show();
+    }
+
     $('.m_assignment').text(assignmentSort[rs.job.assignment_type]);
     $('.m_client').text(rs.job.client_name);
     $('.m_person').text(rs.job.contact_person);
@@ -627,6 +641,7 @@ function CshowPreviewModal(rs) {
 }
 
         function multipleAttach(rs){
+            
 			let validAttachments = rs.attachments; // Get all file objects
 			const $tbodyattachmentView = $('.attachmentView');
 			$tbodyattachmentView.empty();
@@ -650,7 +665,7 @@ function CshowPreviewModal(rs) {
 				validAttachments.forEach(file => {
                     const fileName = file.file_path.split('/').pop(); // Extract file name from file path
                     const fileType = file.file_path.split('.').pop() || 'Unknown'; // Extract file extension as type
-                    // let FS=file.size || 0
+                    let FS=convertKBtoMB(file.file_size || 0);
                     // const fileSize = (FS / (1024 * 1024)).toFixed(2) + ' MB'; // Convert size to MB
                     // let filek=calculateSingleFileDetails(file);
                     // console.log(filek);
@@ -659,7 +674,7 @@ function CshowPreviewModal(rs) {
 						<tr>
 							<td>${fileName}</td>
 							<td>${fileType}</td>
-							<td>-</td>
+							<td>${FS}</td>
 						</tr>
 					`);
 				});
@@ -746,6 +761,7 @@ function CshowPreviewModal(rs) {
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         font-size: 16px;
     }
+    
 </style>
 
 

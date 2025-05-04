@@ -126,7 +126,9 @@
 					</div>
 					<div class="form-group">
 						<label>Email Address <span>*</span></label>
-						<input type="email" class="form-control" name="email_address">
+						<input type="email" class="form-control" name="email_address" 
+						oninvalid="this.setCustomValidity('Please enter email in correct format')"
+						oninput="this.setCustomValidity('')">
 						<span class="error-msg"></span>
 					</div>
 					<div class="form-group" id="tax_year">
@@ -654,14 +656,14 @@
                   <td class="m_client"></td>
                 </tr>
                 <tr>
-                  <th>Contact person Name:</th>
+                  <th>Contact Name:</th>
                   <td class="m_person"></td>
                 </tr>
                 <tr>
                   <th>Email:</th>
                   <td class="m_email"></td>
                 </tr>
-                <tr>
+                <tr class="otherTaxyear fldother">
                   <th>Tax Year:</th>
                   <td class="m_taxyear"></td>
                 </tr>
@@ -669,11 +671,11 @@
                   <th>Budgeted hours:</th>
                   <td class="m_budget"></td>
                 </tr>
-                <tr>
+                <tr class="otherAccountancy fldother">
                   <th>Accountancy Fees (Net):</th>
                   <td class="m_fee"></td>
                 </tr>
-                <tr>
+                <tr class="otherComment fldother">
                   <th>Additional Comments:</th>
                   <td class="m_comments"></td>
                 </tr>
@@ -937,12 +939,18 @@
 			const email      = formData.get('email_address')        || '';
 			const taxYearEnd = formData.get('tax_year_end')         || '';
 			const yearEnd    = formData.get('year_end')             || '';
-			const m_budget    = formData.get('budgeted_hours')             || '';
-			const m_fee    = formData.get('accountancy_fee_net')             || '';
-			const m_comments    = formData.get('additional_comment')             || '';
+			const m_budget    = formData.get('budgeted_hours')      || '';
+			const m_fee    = formData.get('accountancy_fee_net')    || '';
+			const m_comments = formData.get('additional_comment')   || '';
 			// …and so on for any other fields you want to preview
 
 			// Inject into your modal
+			if (assignment === 'other') {
+				// alert("ASdff");
+				$('.fldother').hide();
+			}else{
+				$('.fldother').show();
+			}
 
 			// Mapping object
 			const assignmentTypeLabels = {
@@ -1100,5 +1108,6 @@
 			});
 		}
 
+		
 
 </script>

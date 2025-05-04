@@ -175,26 +175,39 @@
                                         <label>Address: </label>
                                         <input type="text" class="form-control" name="address" value="<?php echo $userDtls->address_line_1;?>">
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 d-none">
                                         <label>Blood Group: </label>
                                         <input type="text" class="form-control"  name="blood_group"  value="<?php echo $userDtls->blood_group;?>">
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 d-none">
                                         <label>Emergency Contact No: </label>
                                         <input type="text" class="form-control" name="EmergencyContactNo" value="<?php echo $userDtls->emergency_contact;;?>">
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label>Personal Contact: </label>
+                                        <label>Contact: </label>
                                         <input type="text" class="form-control" name="PersonalContact" value="<?php echo $userDtls->personal_contact;?>">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label>Gender: </label>
                                         <input type="text" class="form-control" name="Gender" value="<?php echo $userDtls->gender;?>">
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 d-none">
                                         <label>Date Of Birth: </label>
                                         <input type="text" class="form-control"  name="dob" value="<?php echo $userDtls->dob;?>">
                                     </div>
+
+
+                                    <div class="form-group col-md-6">
+                                        <label>Frim Name: </label>
+                                        <input type="text" class="form-control" name="firm_name" value="<?php echo $userDtls->firm_name;?>">
+                                    </div>
+
+
+                                    <div class="form-group col-md-6">
+                                        <label> Firm Address : </label>
+                                        <input type="text" class="form-control" name="firm_address" value="<?php echo $userDtls->firm_address;?>">
+                                    </div>
+
                                 </div>
                                 <button type="submit" name="" class="btn btn-sm btn-purple">Save Changes</button>
                             </form>
@@ -241,13 +254,16 @@ $('#profileFormm').on('submit', function(e) {
         success: function(res) {
           console.log("gggg",res)
             if (res.status === 'success') {
-                Swal.fire('Updated!', res.message, 'success');
+                // Swal.fire('Updated!', res.message, 'success');
+                toastr.success(res.message);
             } else {
-                Swal.fire('Failed!', res.message, 'error');
+                // Swal.fire('Failed!', res.message, 'error');
+                toastr.error(res.message);
             }
         },
         error: function() {
-            Swal.fire('Oops!', 'Server error occurred.', 'error');
+            // Swal.fire('Oops!', 'Server error occurred.', 'error');
+            toastr.error('Something went wrong!');
         }
     });
 });

@@ -17,6 +17,8 @@
     <link rel="icon" type="image/png" href="https://accurexaccounting.com/assets/img/favicon.png">
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <style>
         /* Loader CSS */
@@ -57,6 +59,10 @@
             font-size: 14px;
             font-family: 'Roboto';
             font-weight: 400;
+        }
+
+        .breadcrumb {
+            display:none !important;
         }
         
     </style>
