@@ -1,5 +1,4 @@
 <?php include('header.php');?>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <style type="text/css">
 	.logo{
 		width: 100%;
@@ -80,10 +79,6 @@
 	.navbar{
 		padding: 1rem 1rem;
 	}
-	div#jobChart {
-        background: #fff;
-        padding: 20px 0px;
-    }
 </style>
 <?php include('navigation.php');?>
 <div class="page-content">
@@ -132,28 +127,14 @@
 	    	</div>
 		
 	     <div class="col-md-4">
-	      <div class="section-header"> Job Status </div>
-	      <div id="pieChart"  class="box text-center">
-	        <!-- <canvas id="jobStatusChart"></canvas> -->
+	      <div class="section-header">Job Status</div>
+	      <div class="box text-center">
+	        <canvas id="jobStatusChart"></canvas>
 	      </div>
-	   
-		  </div>
-
-</div>
-
-		<div id="jobChart1">
-			<select id="yearFilter" onchange="loadChart(this.value)">
-				<!-- Years will be added dynamically by JS -->
-			</select>
-		</div>
-		<div id="jobChart"></div>
-	
+	    </div>
+	  </div>
 	</div>  
 	
-
-
-
-<?php include('footer.php');?>
 
 
 	<script>
@@ -269,6 +250,9 @@ $(document).ready(function() {
 
 
 <script>
+//   let currentPage = 1;
+
+  
   // Search on typing (with delay)
   let searchTimer;
   $('#searchJobCode, #searchJobName').on('keyup', function() {
@@ -284,118 +268,8 @@ $(document).ready(function() {
   });
 </script>
 
- 
-
-<script>
-    // Data values
-	 
-	var dataValues = [<?= $chart['on_hold'] ?>, <?= $chart['completed'] ?>, <?= $chart['current'] ?>];
-	var fruitNames = ['On Hold', 'Completed', 'Current'];
-
-    // Labels with value appended: Apple (44), etc.
-    var labelsWithValues = fruitNames.map((name, index) => `${name} (${dataValues[index]})`);
-
-    var options = {
-      chart: {
-        type: 'pie',
-        height: 350
-      },
-      series: dataValues,
-      labels: labelsWithValues,
-      legend: {
-        position: 'bottom'
-      },
-      colors: ['#f65d1f', '#28a745', '#14264d']
-    };
-
-    var chart = new ApexCharts(document.querySelector("#pieChart"), options);
-    chart.render();
-  </script>
 
 
-	<script>
- 
 
-// Dynamically populate year dropdown
-const yearSelect = document.getElementById('yearFilter');
-const currentYear = new Date().getFullYear();
 
-for (let y = currentYear; y >= 2023; y--) {
-    const opt = document.createElement('option');
-    opt.value = y;
-    opt.innerText = y;
-    yearSelect.appendChild(opt);
-}
-
-let chart1;
-
-function loadChart(year) {
-    fetch(`<?= base_url('Clients/FetchBarCharti/') ?>${year}`)
-        .then(res => res.json())
-        .then(data => {
-            const series = [
-                {
-                    name: 'Bookkeeping',
-                    data: data.bookkeeping ? Object.values(data.bookkeeping) : []
-                },
-                {
-                    name: 'Year End Account',
-                    data: data.year_end_account ? Object.values(data.year_end_account) : []
-                },
-                {
-                    name: 'Personal Tax Return',
-                    data: data.personal_tax_return ? Object.values(data.personal_tax_return) : []
-                }
-            ];
-
-            const options = {
-                chart: {
-                    type: 'bar',
-                    height: 350
-                },
-                series: series,
-                xaxis: {
-                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: '95%',
-                        borderRadius: 5
-                    }
-                },
-                dataLabels: {
-                    enabled: true,
-                    offsetY: -10,
-                    style: {
-                        fontSize: '12px',
-                        colors: ['#000']
-                    }
-                },
-                colors: ['#f65d1f', '#28a745', '#14264d'],
-                legend: {
-                    position: 'top'
-                },
-                title: {
-                    text: `Monthly Job Summary (${year})`,
-                    align: 'center'
-                }
-            };
-
-            if (chart1) {
-                chart1.updateOptions(options);
-            } else {
-                chart1 = new ApexCharts(document.querySelector("#jobChart"), options);
-                chart1.render();
-            }
-        });
-}
-
-// Load chart for the current year on page load
-document.addEventListener('DOMContentLoaded', () => {
-    loadChart(currentYear);
-});
-
-</script>
-
+<?php include('footer.php');?>

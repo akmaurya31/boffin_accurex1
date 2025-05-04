@@ -144,15 +144,8 @@
 					</div>
 					<div class="form-group" name="year_end" id="year_end" style="display:none">
 						<label>Year End <span>*</span></label>
-						<input type="text" class="form-control" name="year_end" id="year_end" placeholder="dd/mm/yyyy" />
-						<!-- <select class="form-control" name="year_end">
-							<option value="2020">2020</option>
-							<option value="2021">2021</option>
-							<option value="2022">2022</option>
-							<option value="2023">2023</option>
-							<option value="2024">2024</option>
-							<option value="2025">2025</option>
-						</select> -->
+						<input type="date" class="form-control" name="year_end" id="year_end" placeholder="dd/mm/yyyy" />
+					
 						<span class="error-msg"></span>
 
 					</div>
@@ -746,11 +739,6 @@
 <!--EndPreview Modal-->
 
 
-<footer class="text-center py-3">
-    <div class="container">
-         &copy; 2025 Accurex Accounting | Powered by <a href="https://boffinweb.com" target="_blank">Boffin Web Technology</a>
-    </div>
-</footer>
 <?php include('footer.php');?>
 <script>
     $(document).ready(function () {
@@ -898,14 +886,16 @@
 				}
 
 				// Accountancy Fee validation
-				if ($('[name="accountancy_fee_net"]').val().trim() === "") {
-					isValid = false;
-					$('[name="accountancy_fee_net"]').css("border", "1px solid red");
-					$('[name="accountancy_fee_net"]').closest('div').find('.error-msg').html("Accountancy fee is required").css("color", "red").show();
-					// alert("accountancy_fee_net required");
-				} else {
-					$('[name="accountancy_fee_net"]').css("border", "");
-					$('[name="accountancy_fee_net"]').closest('div').find('.error-msg').html("").hide();
+				if ($('[name="assignment_type"]').val().trim() != "other") {
+					if ($('[name="accountancy_fee_net"]').val().trim() === "") {
+						isValid = false;
+						$('[name="accountancy_fee_net"]').css("border", "1px solid red");
+						$('[name="accountancy_fee_net"]').closest('div').find('.error-msg').html("Accountancy fee is required").css("color", "red").show();
+						// alert("accountancy_fee_net required");
+					} else {
+						$('[name="accountancy_fee_net"]').css("border", "");
+						$('[name="accountancy_fee_net"]').closest('div').find('.error-msg').html("").hide();
+					}
 				}
 
 				if (!isValid) {
@@ -1095,6 +1085,7 @@
 					$('.customer-form-submiter').prop('disabled', false);
 					$('#loader').hide();
 					if (response.status === "success") {
+					    myAjaxNotify();
 						$('#jobDetailModal').modal('hide');
 						showToast("✅ Thank you! Form submitted successfully.");
 						$("#jobForm")[0].reset();

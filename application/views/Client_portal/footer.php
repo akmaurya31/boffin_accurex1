@@ -1,6 +1,11 @@
+
+<footer class="text-center py-3">
+    <div class="container">
+         &copy; 2025 Accurex Accounting | Powered by <a href="https://boffinweb.com" target="_blank">Boffin Web Technology</a>
+    </div>
+</footer>
+
 <script>
-
-
 $(document).on("click", ".isunread", function () {
   var notifId = $(this).data("id"); // notification ID attribute se
   $.ajax({

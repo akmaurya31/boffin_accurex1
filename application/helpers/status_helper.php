@@ -152,5 +152,134 @@ function generate_job_title($client_name, $assignment_type,$year_end,$created_da
     return "{$client_name}-{$final_type}-{$formatted_date}($FirstNameLastName)";
 }
 
+if (!function_exists('add_notification')) {
+    function add_notification($data)
+    {
+        $CI =& get_instance();
+        $CI->load->database();
+
+         
+        if (!isset($data['client_id']) || !isset($data['jobcode']) || !isset($data['n_status']) || !isset($data['message'])) {
+            return false;
+        }
+        if (!isset($data['is_read'])) {
+            $data['is_read'] = 0;
+        }
+
+        if (!isset($data['created_at'])) {
+            $data['created_at'] = date('Y-m-d H:i:s');
+        }
+
+        return $CI->db->insert('job_notifications', $data);
+    }
+}
+
+
+
+if (!function_exists('getsortname')) {
+    /**
+     * Extracts initials from a full name.
+     *
+     * @param string $full_name The full name string.
+     * @return string The initials (e.g., "SS" for "Shivendra Singh").
+     */
+    function getsortname($full_name) {
+        // Trim and sanitize the full name
+        $full_name = trim($full_name);
+        if (empty($full_name)) {
+            return '';
+        }
+
+        // Split the name into parts
+        $name_parts = preg_split('/\s+/', $full_name);
+
+        // Get the first letter of the first name
+        $first_initial = isset($name_parts[0][0]) ? strtoupper($name_parts[0][0]) : '';
+
+        // Get the first letter of the last name if it exists
+        $last_initial = '';
+        if (count($name_parts) > 1) {
+            $last_initial = isset($name_parts[count($name_parts) - 1][0]) ? strtoupper($name_parts[count($name_parts) - 1][0]) : '';
+        }
+
+        // If last initial is empty, repeat the first initial
+        if (empty($last_initial)) {
+            $last_initial = $first_initial;
+        }
+
+        return strtoupper($first_initial . $last_initial);
+    }
+}
+
+
+
+  
+if (!function_exists('sentMailToClientHelp')) {
+    function sentMailToClientHelp($to, $subject, $message)
+    {
+        $CI =& get_instance();
+        $CI->load->library('email');
+
+        $config = array(
+            'protocol'     => 'smtp',
+            'smtp_host'    => 'smtp.hostinger.com',
+            'smtp_port'    => 465,
+            'smtp_user'    => 'bwt_testing@aa.boffinweb.com',
+            'smtp_pass'    => '*D1eDYgg',
+            'mailtype'     => 'html',
+            'charset'      => 'utf-8',
+            'newline'      => "\r\n",
+            'smtp_crypto'  => 'ssl',
+            'crlf'         => "\r\n"
+        );
+
+        $CI->email->initialize($config);
+        $CI->email->from('bwt_testing@aa.boffinweb.com', 'Accurex Accounting');
+        $CI->email->to($to);
+        $CI->email->subject($subject);
+        $CI->email->message($message);
+
+        if ($CI->email->send()) {
+            return true;
+        } else {
+            log_message('error', $CI->email->print_debugger());
+            return false;
+        }
+    }
+}
+
+if (!function_exists('generate_job_title_from_code')) {
+    function generate_job_title_from_code($jobcode)
+    {
+        $CI =& get_instance(); // Get CodeIgniter instance
+        $CI->load->database(); // Load DB
+
+        $job = $CI->db->where('jobcode', $jobcode)->get('joblist')->row();
+
+        if (!$job) {
+            return "Invalid Job Code";
+        }
+
+        $short_type = strtoupper(substr($job->assignment_type, 0, 3));
+
+        if ($short_type === 'BOO') {
+            $final_type     = 'VAT';
+            $formatted_date = '31-07-' . $job->year_end;
+        } elseif ($short_type === 'PER') {
+            $final_type     = 'PTR';
+            $formatted_date = '05-04-' . $job->year_end;
+        } elseif ($short_type === 'YEA') {
+            $final_type     = 'YE';
+            $formatted_date = $job->year_end;
+        } else {
+            $final_type     = 'OTH';
+            $formatted_date = date('d-m-Y', strtotime($job->created_at));
+        }
+
+        $FirstNameLastName = "RS";
+
+        return "{$job->client_name}-{$final_type}-{$formatted_date}({$FirstNameLastName})";
+    }
+} 
 
 

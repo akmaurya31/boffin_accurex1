@@ -154,7 +154,11 @@
                         <div class="profileForm">
                             <form method="post" id="profileFormm">
                                 <div class="p-4 text-center">
-                                    <img src="https://aa.boffinweb.com/assets/img/user.jpg" class="rounded-circle mx-auto mb-3" width="100" height="100" alt="Profile">
+                                    <?php if(!empty($userDtls->image)){?>
+                                        <img src="<?php echo base_url('upload/'.$userDtls->image);?>" class="rounded-circle mx-auto mb-3" width="100" height="100" alt="Profile">
+                                    <?php }else{?>
+                                        <img src="https://aa.boffinweb.com/assets/img/user.jpg" class="rounded-circle mx-auto mb-3" width="100" height="100" alt="Profile">
+                                    <?php }?>
                                     <h5 class="mb-0"><?php echo 'Hello, ', $userDtls->full_name;?></h5>
                                 </div>
                                 <div class="row">
@@ -223,12 +227,6 @@
 
 	</div>
 
-
-<footer class="text-center py-3">
-    <div class="container">
-         &copy; 2025 Accurex Accounting | Powered by <a href="https://boffinweb.com" target="_blank">Boffin Web Technology</a>
-    </div>
-</footer>
 
 
 <script>

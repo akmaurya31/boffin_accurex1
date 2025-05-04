@@ -284,80 +284,78 @@ class Login extends CI_Controller
             $this->load->view('Login/password_recovery',$data);
         }
     }
-
-
     
-
+    // coding by team A
     public function updateProfile()
-{
+    {
 
-    $data = [
-        'full_name'         => $this->input->post('full_name'),
-        'email'             => $this->input->post('email'), // Read-only, but passed anyway
-        'address_line_1'    => $this->input->post('address'),
-        'blood_group'       => $this->input->post('blood_group'),
-        'emergency_contact' => $this->input->post('EmergencyContactNo'),
-        'personal_contact'  => $this->input->post('PersonalContact'),
-        'gender'            => $this->input->post('Gender'),
-        'dob'               => $this->input->post('dob'),
-    ];
+        $data = [
+            'full_name'         => $this->input->post('full_name'),
+            'email'             => $this->input->post('email'), // Read-only, but passed anyway
+            'address_line_1'    => $this->input->post('address'),
+            'blood_group'       => $this->input->post('blood_group'),
+            'emergency_contact' => $this->input->post('EmergencyContactNo'),
+            'personal_contact'  => $this->input->post('PersonalContact'),
+            'gender'            => $this->input->post('Gender'),
+            'dob'               => $this->input->post('dob'),
+        ];
 
-    $user = $this->session->userdata('accurexClientLoginDetails');
-    // print_r($user); die("Asdfa");
-  
+        $user = $this->session->userdata('accurexClientLoginDetails');
+        // print_r($user); die("Asdfa");
+      
 
-    if ($user && isset($user->user_ID)) {
-        // Perform the update
-        $this->db->where('user_ID', $user->user_ID);
-        $updated = $this->db->update('users', $data);  // <-- This was missing
+        if ($user && isset($user->user_ID)) {
+            // Perform the update
+            $this->db->where('user_ID', $user->user_ID);
+            $updated = $this->db->update('users', $data);  // <-- This was missing
 
-        if ($updated) {
-            echo json_encode(['status' => 'success', 'message' => 'Profile updated successfully.']);
+            if ($updated) {
+                echo json_encode(['status' => 'success', 'message' => 'Profile updated successfully.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Update failed. Try again.']);
+            }
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Update failed. Try again.']);
+            echo json_encode(['status' => 'error', 'message' => 'User not logged in.']);
         }
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'User not logged in.']);
     }
-}
-
-public function updatePassword()
-{
-    $newPass = $this->input->post('new_password');
-    $confirmPass = $this->input->post('confirm_password');
-
-    // Session check
-    $user = $this->session->userdata('accurexClientLoginDetails');
-
-    // if (!$this->is_logged() || !$user) {
-    //     echo json_encode(['status' => 'error', 'message' => 'Please login again.']);
-    //     return;
-    // }
-
-    // Validate passwords
-    if (empty($newPass) || empty($confirmPass)) {
-        echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
-        return;
+    public function updatePassword()
+    {
+        $newPass = $this->input->post('new_password');
+        $confirmPass = $this->input->post('confirm_password');
+    
+        // Session check
+        $user = $this->session->userdata('accurexClientLoginDetails');
+    
+        // if (!$this->is_logged() || !$user) {
+        //     echo json_encode(['status' => 'error', 'message' => 'Please login again.']);
+        //     return;
+        // }
+    
+        // Validate passwords
+        if (empty($newPass) || empty($confirmPass)) {
+            echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+            return;
+        }
+    
+        if ($newPass !== $confirmPass) {
+            echo json_encode(['status' => 'error', 'message' => 'Passwords do not match.']);
+            return;
+        }
+    
+        // Hash password
+       // $hashed = password_hash($newPass, PASSWORD_DEFAULT); by aviansh
+       //'password' => sha1($this->input->post('password')),  //right
+    
+         $hashed = sha1($newPass); 
+        // Update DB
+        $this->db->where('auth_ID', $user->user_ID);
+        $update = $this->db->update('auth', ['password' => $hashed]);
+    
+        if ($update) {
+            echo json_encode(['status' => 'success']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Update failed.']);
+        }
     }
-
-    if ($newPass !== $confirmPass) {
-        echo json_encode(['status' => 'error', 'message' => 'Passwords do not match.']);
-        return;
-    }
-
-    // Hash password
-    $hashed = password_hash($newPass, PASSWORD_DEFAULT);
-
-    // Update DB
-    $this->db->where('auth_ID', $user->user_ID);
-    $update = $this->db->update('auth', ['password' => $hashed]);
-
-    if ($update) {
-        echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Update failed.']);
-    }
-}
-
 
 }

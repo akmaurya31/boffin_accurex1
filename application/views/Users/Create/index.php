@@ -83,6 +83,14 @@
     <div class="col-md-12">
         <div class="card-box">
             <h4 class="card-title">User Information</h4>
+            <?php
+                if(isset($success)){?>
+                <div class="alert alert-success">
+                    <strong>Success!</strong><?php echo $success;?>
+                </div>
+            <?php
+                }
+            ?>
             <?php if(!isset($edit)){?>
                 <form action="<?php echo base_url('save-user');?>" method="POST" enctype="multipart/form-data">
             <?php }else{?>

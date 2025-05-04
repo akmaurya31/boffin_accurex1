@@ -17,6 +17,21 @@
         
         
     
+        // public function dashboard()
+        // {
+        //     if($this->is_logged()){
+        //         $limit = 20;
+        //         $offset = 0;
+            
+        //         $data['jobs'] = $this->Client_model->get_filtered_jobs($limit, $offset);
+        //         $data['total'] = $this->Client_model->count_filtered_jobs();
+        //         $this->load->view('Client_portal/dashboard',$data);
+        //     }else{
+        //         $this->session->set_flashdata('error','Please login to continue.');
+        //         redirect('Clients');
+        //     }
+        // }
+        
         public function dashboard()
         {
             if($this->is_logged()){
@@ -25,6 +40,14 @@
             
                 $data['jobs'] = $this->Client_model->get_filtered_jobs($limit, $offset);
                 $data['total'] = $this->Client_model->count_filtered_jobs();
+
+                // $data['cart'] = $this->Client_model->get_jobs_by_status();
+                $data['chart'] = $this->Client_model->get_job_status_counts();
+                //  print_r($data); die("ASdfa");
+                 $currentYear = date('Y');
+                $data['charti'] = $this->FetchBarChart($currentYear, false); 
+               //  print_r($data['charti']);
+
                 $this->load->view('Client_portal/dashboard',$data);
             }else{
                 $this->session->set_flashdata('error','Please login to continue.');
@@ -54,7 +77,8 @@
         
             // Generate jobcode
             $currentYear = date('Y'); // 2025
-            $jobcode = 'PS' . $currentYear . str_pad($nextId, 5, '0', STR_PAD_LEFT);
+            $letters=getsortname($userDetails->full_name);
+            $jobcode = $letters. $currentYear . str_pad($nextId, 5, '0', STR_PAD_LEFT);
 
             $year_end = '';
             if ($assignment_type === 'year_end_account') {
@@ -111,6 +135,14 @@
 
                 // 2. Upload Attachments
                 $this->upload_attachments($jobcode); // this saves files to job_attachments table
+                 
+                $noti_data=array();
+                $noti_data['client_id']=$user_id;	
+                $noti_data['jobcode']=$jobcode;
+                $noti_data['n_status']=3;	
+                $noti_data['message']="New Job";
+                $noti_data['is_read']=0;
+                add_notification($noti_data);
 
                 $response = [
                     'status' => 'success',
@@ -192,7 +224,8 @@
                         $data = $this->upload->data();
                         $uploaded_files[] = [
                             'job_code' => $job_code,
-                            'file_path' => 'uploads/job_attachments/' . $data['file_name']
+                            'file_path' => 'uploads/job_attachments/' . $data['file_name'],
+                            'file_size' =>  $file_size
                         ];
                     }
                 }
@@ -231,9 +264,6 @@
         
         public function fetch_paginated_jobs() 
         {
-            $sessionData = $this->session->userdata('accurexClientLoginDetails');
-        
-            
             $limit = $this->input->get('limit') ?? 20;
             $page = $this->input->get('page') ?? 1;
             $offset = ($page - 1) * $limit;
@@ -254,8 +284,7 @@
             $filters = [
                 'search_code' => $search_code,
                 'search_name' => $search_name,
-                'status' => $status,
-                
+                'status' => $status
             ];
 
             $total = 0;
@@ -444,6 +473,8 @@
             // Step 4: Load view
             $this->load->view('Client_portal/clientProfileInformation', $data);
         }
+        
+        
         
         /* Code Introduced By Rohit Mishra on 26APR2025 AT 09:30 PM */
         
@@ -657,8 +688,71 @@
         // Load the view
         $this->load->view('Client_portal/ClientsJobsList', $data);
     }
+    
+        public function FetchBarChart($year = null, $asJson = true)
+        {
+            $this->load->model('Client_model');
+        
+            // Default year if not provided
+            $year = $year ?? date('Y');
+        
+            // Get data from model
+            $chartData = $this->Client_model->get_monthly_job_summary($year);
+        
+            // Return JSON if requested via AJAX
+            if ($asJson && $this->input->is_ajax_request()) {
+                header('Content-Type: application/json');
+                echo json_encode($chartData);
+                return;
+            }
+        
+            // Else, return data to be used in controller/view
+            return $chartData;
+        }
 
 
 
+        public function FetchBarCharti($year = null)
+        {
+            $this->load->model('Client_model');
+        
+            // Use the provided year or default to the current year
+            $year = $year ?? date('Y');
+        
+            // Fetch chart data for the specified year
+            
+            $chartData = $this->Client_model->get_monthly_job_summary($year);
+            
+            // Return the data as JSON
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode($chartData));
+        }
+        
+        // coding by team 
+      public function clientJobHistories($jobcode = null)
+     {
+        $sessionData = $this->session->userdata('accurexClientLoginDetails'); 
+        $user_id = $sessionData->user_ID;
+        // Job basic info
+        $data['job'] = $this->Client_model->findJobByCode($jobcode);
+        // Job Query List
+        $data['job_query'] = $this->db->where('jobcode', $jobcode)
+                                    ->get('job_query')
+                                    ->result();
+        // Job Notifications
+        $data['job_notifications'] = $this->db->where('jobcode', $jobcode)
+                                            ->get('job_notifications')
+                                            ->result();
+        // Job Attachments
+        $data['job_attachments'] = $this->db->where('job_code', $jobcode)
+                                            ->get('job_attachments')
+                                            ->result();
+                                          
+        $this->load->view('Client_portal/clientJobHistories', $data);
+     }
+
+        
+        
     
     }

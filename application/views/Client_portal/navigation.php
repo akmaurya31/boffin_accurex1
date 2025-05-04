@@ -187,7 +187,7 @@
                    ---
                 </div>
                 <div class="text-center p-2">
-                  <a href="<?php echo base_url('ClientsNotification');?>" class="btn btn-outline-primary btn-sm">View All Notifications</a>
+                  <a href="<?php echo base_url('ClientsNotification');?>" class="btn-outline-primary btn-sm">View All Notifications</a>
                 </div>
               </div>
             </li>

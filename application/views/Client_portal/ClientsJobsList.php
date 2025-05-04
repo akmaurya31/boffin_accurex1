@@ -295,11 +295,11 @@
                     <input type="file" class="form-control" name="attachments[]" multiple accept=".jpeg,.jpg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx">
                     <span style="font-size: 13px; color: #f65d1f;">Total attachement size upto 100 MB</span>
                     <br/>
-                    <span style="font-size: 13px; color: #f65d1f;">JPG,JPEG,PNG,XSLS,DOC,PDF,WEBP</span>
+                    <span style="font-size: 13px; color: #f65d1f;">JPG, JPEG, PNG, XSLS, DOC, PDF, WEBP</span>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" name="" class="btn btn-sm btn-purple">Send Mail</button>
+            <button type="submit" name="" class="btn btn-sm btn-purple">Submit</button>
           <button type="button" class="btn btn-sm btn-secondary dismiss" data-dismiss="modal">Close</button>
         </div>
     <?= form_close(); ?>
@@ -466,7 +466,7 @@ $(document).ready(function () {
                                 <td>${jobDate}</td>
                                 <td>${job.additional_comment}</td>
                                 <td class="actions">
-                                    <a href="" class="btn btn-sm btn-search"><i class="fa fa-search"></i></a>
+                                    <a href="<?php echo base_url('clientJobHistories');?>/${job.jobcode}" class="btn btn-sm btn-search"><i class="fa fa-search"></i></a>
                                     <a href="javascript:void(0);" 
                                         class="btn btn-sm btn-send" 
                                         data-toggle="modal" 
@@ -748,9 +748,5 @@ function CshowPreviewModal(rs) {
     }
 </style>
 
-<footer class="text-center py-3">
-    <div class="container">
-         &copy; 2025 Accurex Accounting | Powered by <a href="https://boffinweb.com" target="_blank">Boffin Web Technology</a>
-    </div>
-</footer>
+
 <?php include('footer.php');?>

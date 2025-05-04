@@ -97,7 +97,7 @@ class User extends CI_Controller {
                     'country'           => $this->input->post('country'),
                     'status'            => $this->input->post('status'),
                     'role_ID'           => $this->input->post('role'),
-                    'image'             => $data['upload_data']['file_name'],
+                    'image'             => "images/profile_img/".$data['upload_data']['file_name'],
                 ];
     
                 // Insert into DB users,auth and key
@@ -116,7 +116,55 @@ class User extends CI_Controller {
                     'pass_key'  => $this->input->post('password')
                 ];
                 $saveKey  = $this->user_lib->saveUserData('users_key_db',$keyArray);
-    
+                $loginUrl  = base_url().'Clients/';
+                $message ='
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <meta charset="UTF-8">
+                                <title>Login Invitation</title>
+                            </head>
+                            <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+                                <table width="100%" style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border: 1px solid #ddd; border-radius: 8px;">
+                                    <tr>
+                                        <td>
+                                            <h2 style="color: #333;">Client Portal Access Has Been Created!</h2>
+                                            <p>Hello <strong>'.$this->input->post('name').'</strong>,</p>
+                                            <p>Welcome to Accurex Accounting Client Portal</p>
+                                            <p>We’re excited to let you know that your client portal account has been successfully created. You can now login to access your dedicated client portal.</p>
+                                            
+                                            <p>🔐 Your Login Credentials:<br>
+                                                <table with="100%">
+                                                    <tr style="text-align:left">
+                                                        <th>Portal URL:</th>
+                                                        <td>'.$loginUrl.'</td>
+                                                    </tr>
+                                                    <tr style="text-align:left">
+                                                        <th>Username:</th>
+                                                        <td>'.$this->input->post('email').'</td>
+                                                    </tr>
+                                                    <tr style="text-align:left">
+                                                        <th>Temporary Password :</th>
+                                                        <td>'.$this->input->post('password').'</td>
+                                                    </tr>
+                                                </table>
+                                            </p>
+                                            <p>Thank you,</p>
+                                            <p><strong>Accurex Accounting</strong><br>
+                                            <a href="mailto:contact@accurexaccounting.com">contact@accurexaccounting.com</a><br>
+                                            <a href="https://accurexaccounting.com/">https://accurexaccounting.com/</a></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </body>
+                            </html>
+                            ';
+                $subject = 'Client Portal Access Has Been Created!';
+
+                $sentEmail = $this->sentMailToClient($this->input->post('email'),$subject,$message);
+
+                $this->session->set_userdata('success','Account Created successfully sent to your register E-mail ID.');
+                
                 redirect('list-user');
             }
         }
@@ -278,4 +326,33 @@ class User extends CI_Controller {
             echo FALSE;
         }
     }  
+    
+    public function sentMailToClient($to,$subject,$message){
+        $this->load->library('email');
+        $config = array(
+            'protocol'  => 'smtp',
+            'smtp_host' => 'smtp.hostinger.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'bwt_testing@aa.boffinweb.com',
+            'smtp_pass' => '*D1eDYgg',
+            'mailtype'  => 'html',
+            'charset'   => 'utf-8',
+            'newline'   => "\r\n",
+            'smtp_crypto' => 'ssl',
+            'crlf'      => "\r\n"
+        );
+
+        $this->email->initialize($config);
+        $this->email->from('bwt_testing@aa.boffinweb.com', 'Accurex Accounting');
+        $this->email->to($to);
+        $this->email->subject($subject);
+        $this->email->message($message);
+
+        if ($this->email->send()) {
+            return true;
+        } else {
+            echo $this->email->print_debugger();
+            return false;
+        }
+    }
 }

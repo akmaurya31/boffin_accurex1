@@ -138,7 +138,7 @@ class Client_model extends CI_Model {
         return $this->db->count_all_results();
     }
 
-    public function extra_get_filtered_jobs($limit, $offset, $filters, &$total = 0) {
+     public function extra_get_filtered_jobs($limit, $offset, $filters, &$total = 0) {
         // Total count query (without limit)
         $this->db->from('joblist');
         $sessionData = $this->session->userdata('accurexClientLoginDetails');
@@ -213,6 +213,95 @@ class Client_model extends CI_Model {
         return $query->result_array();
     }
     
+    public function get_jobs_by_status($status_type, $limit, $offset) {
+        $sessionData = $this->session->userdata('accurexClientLoginDetails');
+        $this->db->select('*')->from('joblist');
+    
+        // Define status types
+        if ($status_type === 'current') {
+            $this->db->where_in('status', [1, 3, 5]);
+        } elseif ($status_type === 'on_hold') {
+            $this->db->where('status', 2);
+        } elseif ($status_type === 'completed') {
+            $this->db->where('status', 4);
+        }
+        $this->db->where("user_id",$sessionData->user_ID);
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit($limit, $offset);
+        
+        return $this->db->get()->result();
+    }
+
+    public function get_job_status_counts() {
+        $sessionData = $this->session->userdata('accurexClientLoginDetails');
+        $status_counts = [
+            'current'   => 0,
+            'on_hold'   => 0,
+            'completed' => 0
+        ];
+    
+        // Query all jobs
+        $query = $this->db->select('status, COUNT(*) as total')
+                          ->from('joblist')
+                          ->where("user_id",$sessionData->user_ID)
+                          ->group_by('status')
+                          ->get();
+    
+        $results = $query->result();
+    
+        // Map the status values
+        foreach ($results as $row) {
+            if (in_array($row->status, [1, 3, 5])) {
+                $status_counts['current'] += $row->total;
+            } elseif ($row->status == 2) {
+                $status_counts['on_hold'] = $row->total;
+            } elseif ($row->status == 4) {
+                $status_counts['completed'] = $row->total;
+            }
+        }
+    
+        return $status_counts;
+    }
+
+
+    public function get_monthly_job_summary($year)
+    {
+        $sessionData = $this->session->userdata('accurexClientLoginDetails');
+        $months = array_fill(1, 12, 0); // 1 to 12 for Jan to Dec
+
+        // Default structure for A, B, C
+
+        $jobData = [
+            'bookkeeping' => $months,
+            'year_end_account' => $months,
+            'personal_tax_return' => $months
+        ];
+        $query = $this->db->select("assignment_type, MONTH(created_at) as month, COUNT(*) as total")
+            ->from("joblist")
+            ->where("user_id",$sessionData->user_ID)
+            ->where("YEAR(created_at)", $year)
+            ->where_in("assignment_type", ['bookkeeping', 'year_end_account', 'personal_tax_return'])
+            ->group_by(["assignment_type", "MONTH(created_at)"])
+            ->order_by("assignment_type")
+            ->get();
+
+        foreach ($query->result() as $row) {
+            $jobData[$row->assignment_type][(int)$row->month] = (int)$row->total;
+        }
+
+        return $jobData;
+    }
+    
+        public function findJobByCode($jobcode = null)
+    {
+        $query = $this->db->select("*")
+            ->from("joblist")
+            ->where("jobcode", $jobcode)
+            ->get();
+
+        return $query->row(); // ✅ Return single row instead of query object
+    }
+        
     
     
     

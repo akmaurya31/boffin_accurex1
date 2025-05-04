@@ -112,5 +112,14 @@ $route['logout-client']                 = 'Clients/logout_client';
 // Avinash
 $route['jobCommentForm']		        = 'Clients/jobCommentForm';
 $route['get_job_details']		        = 'Clients/get_job_details';
+
+// 30-04-2025 Team Avinash
 $route['updateProfile']		            = 'Login/updateProfile';
 $route['updatePassword']		        = 'Login/updatePassword';
+
+$route['FetchBarChart']                 = 'Clients/FetchBarChart';
+$route['FetchBarCharti/(:num)']         = 'Clients/FetchBarCharti/$1';
+
+$route['clientJobHistories/(:any)'] = 'Clients/clientJobHistories/$1';
+
+
