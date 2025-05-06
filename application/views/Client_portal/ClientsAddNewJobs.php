@@ -709,7 +709,11 @@
 				</table>
 
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 ">
+		  <tr class="">
+                  <th>Additional Comments:</th>
+                  <td class="m_comments"></td>
+                </tr>
             <table class="table table-bordered">
               <tbody class="previewEmployement">
 			    <tr>

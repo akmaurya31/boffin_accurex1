@@ -1,5 +1,8 @@
 <?php include('header.php');?>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style type="text/css">
 	.logo{
 		width: 100%;
@@ -141,18 +144,17 @@
 
 </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #14264d; color: white;">
-        <h3>Monthly Job Summary  </h3></div>
-		<div id="jobChart1">
-			<select id="yearFilter" onchange="loadChart(this.value)">
-				<!-- Years will be added dynamically by JS -->
-			</select>
-		</div>
-		<div id="jobChart"></div>
-    </div>
-	
-	</div>  
-	
+
+<div class="container py-4">
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #14264d; color: white;">
+    <h3>Monthly Job Summary  </h3> 
+  <div>
+    <label for="year">Year</label>
+    <select id="yearFilter" onchange="loadChart(this.value)">
+    </select>
+  </div>
+  </div>  
+  <div id="jobChart"></div>
 
     <div class="container py-4">
 
@@ -160,10 +162,7 @@
     <h3>Job Turnaround Time</h3>
     <div>
       <label for="year">Year</label>
-      <select id="year">
-        <option value="2019" selected>2019</option>
-        <option value="2020">2020</option>
-        <option value="2021">2021</option>
+      <select id="yearFilter_jtt" >
       </select>
     </div>
   </div>
@@ -171,69 +170,72 @@
   <div id="jtt_chart" style="padding: 10px;"></div>
 
   <script>
-    const jtt_options = {
-      chart: {
-        type: 'bar',
-        height: 350,
-        toolbar: { show: false }
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-          endingShape: 'flat'
-        }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        show: true,
-        width: 1,
-        colors: ['transparent']
-      },
-      xaxis: {
-        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-      },
-      yaxis: {
-        title: {
-          text: 'Days'
-        },
-        min: 0,
-        max: 12
-      },
-      fill: {
-        opacity: 1,
-        colors: ['#81d4fa', '#f8bbd0', '#ffe0b2'] // light blue, pink, light orange
-      },
-      tooltip: {
-        y: {
-          formatter: function (val) {
-            return val + " days";
-          }
-        }
-      },
-      legend: {
-        position: 'bottom'
-      },
-      series: [
-        {
-          name: 'Bookkeeping / VAT',
-          data: [3, 3, 4, 3, 2, 3, 4, 4, 3, 3, 5]
-        },
-        {
-          name: 'Year end account',
-          data: [3, 3, 2, 2, 3, 4, 5, 5, 5, 4, 3]
-        },
-        {
-          name: 'Tax return',
-          data: [3, 3, 1, 1, 2, 3, 4, 6, 10, 2, 3]
-        }
-      ]
-    };
+   let jtt_chart;
 
-    const jtt_chart = new ApexCharts(document.querySelector("#jtt_chart"), jtt_options);
-    jtt_chart.render();
+  function fetchChartData(selectedYear) {
+    $.ajax({
+      url: '<?php echo base_url(); ?>clients/get_job_turnaround_data/' + selectedYear,
+      method: 'GET',
+      dataType: 'json',
+      success: function (data) {
+        const assignmentTypes = [...new Set(data.map(item => item.assignment_type))];
+
+        const seriesData = assignmentTypes.map(type => {
+          const monthly = Array(12).fill(null); // Jan to Dec
+          data.forEach(row => {
+            if (row.assignment_type === type) {
+              monthly[row.month - 1] = parseFloat(row.avg_days);
+            }
+          });
+          return { name: type, data: monthly };
+        });
+
+        if (jtt_chart) {
+          jtt_chart.updateSeries(seriesData);
+        } else {
+          const options = {
+            chart: { type: 'bar', height: 350, toolbar: { show: false } },
+            plotOptions: {
+              bar: { horizontal: false, columnWidth: '55%', endingShape: 'flat' }
+            },
+            dataLabels: { enabled: false },
+            stroke: { show: true, width: 1, colors: ['transparent'] },
+            xaxis: {
+              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yaxis: {
+              title: { text: 'Days' },
+              min: 0,
+              max: 30
+            },
+            fill: { opacity: 1 },
+            tooltip: {
+              y: {
+                formatter: val => (val ? val + " days" : "0 days")
+              }
+            },
+            legend: { position: 'bottom' },
+            colors: ['#81d4fa', '#f8bbd0', '#ffe0b2'],  // Apply custom colors here
+            series: seriesData
+          };
+
+          jtt_chart = new ApexCharts(document.querySelector("#jtt_chart"), options);
+          jtt_chart.render();
+        }
+      }
+    });
+  }
+
+  $("#yearFilter_jtt").on("change", function () {
+    const selectedYear = $(this).val() || new Date().getFullYear(); // default to current year
+    fetchChartData(selectedYear);
+  });
+
+  // Initial load
+  const currentYear_jtt1 = new Date().getFullYear();
+  fetchChartData(currentYear_jtt1);
+
   </script>
     </div>  
 
@@ -473,6 +475,18 @@ $(document).ready(function() {
 
 
 	<script>
+
+
+const yearSelect_jtt = document.getElementById('yearFilter_jtt');
+const currentYear_jtt = new Date().getFullYear();
+
+for (let y = currentYear_jtt; y >= 2023; y--) {
+    let opt = document.createElement('option');
+    opt.value = y;
+    opt.innerText = y;
+    yearSelect_jtt.appendChild(opt);
+}
+
  
 
 // Dynamically populate year dropdown
@@ -507,7 +521,7 @@ function loadChart(year) {
                 },
                 {
                     name: 'Other',
-                    data: data.personal_tax_return ? Object.values(data.personal_tax_return) : []
+                    data: data.other ? Object.values(data.other) : []
                 }
             ];
 
@@ -559,6 +573,4 @@ function loadChart(year) {
 document.addEventListener('DOMContentLoaded', () => {
     loadChart(currentYear);
 });
-
 </script>
-

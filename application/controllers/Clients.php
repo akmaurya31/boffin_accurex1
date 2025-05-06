@@ -5,6 +5,7 @@
         public function __construct()
         {
             parent::__construct();
+            $this->load->model('Client_model');
         }
     
         // coding by uttam patel starting
@@ -754,7 +755,11 @@
         $this->load->view('Client_portal/clientJobHistories', $data);
      }
 
-        
+  //06/05/2025
+  public function get_job_turnaround_data($year=2025) {
+    $data = $this->Client_model->get_job_turnaround_time_by_year($year);
+    echo json_encode($data);
+  }      
         
     
     }

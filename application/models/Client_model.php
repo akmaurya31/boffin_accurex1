@@ -274,13 +274,14 @@ class Client_model extends CI_Model {
         $jobData = [
             'bookkeeping' => $months,
             'year_end_account' => $months,
-            'personal_tax_return' => $months
+            'personal_tax_return' => $months,
+            'other' => $months,
         ];
         $query = $this->db->select("assignment_type, MONTH(created_at) as month, COUNT(*) as total")
             ->from("joblist")
             ->where("user_id",$sessionData->user_ID)
             ->where("YEAR(created_at)", $year)
-            ->where_in("assignment_type", ['bookkeeping', 'year_end_account', 'personal_tax_return'])
+            ->where_in("assignment_type", ['bookkeeping', 'year_end_account', 'personal_tax_return','other'])
             ->group_by(["assignment_type", "MONTH(created_at)"])
             ->order_by("assignment_type")
             ->get();
@@ -302,6 +303,58 @@ class Client_model extends CI_Model {
         return $query->row(); // ✅ Return single row instead of query object
     }
         
+    
+    //06/05/2025
+    public function get_job_turnaround_time() {
+        $this->db->select("assignment_type, 
+                           MONTH(completed_date) as month,
+                           YEAR(completed_date) as year,
+                           AVG(DATEDIFF(completed_date, recieved_on)) as avg_turnaround_days");
+        $this->db->from("joblist");
+        $this->db->where("status", 3);
+        $this->db->where("completed_date IS NOT NULL", null, false);
+        $this->db->where("recieved_on IS NOT NULL", null, false);
+        $this->db->where("completed_date >=", date("Y-m-01", strtotime("-11 months"))); // 12 months including current
+        $this->db->group_by(["assignment_type", "YEAR(completed_date)", "MONTH(completed_date)"]);
+        $this->db->order_by("year ASC, month ASC");
+    
+        return $this->db->get()->result();
+    }
+    
+
+    public function get_job_turnaround_time_by_year($year = 2025) {
+        $this->db->select("assignment_type,
+                           MONTH(completed_date) as month,
+                           AVG(DATEDIFF(completed_date, recieved_on)) as avg_days");
+        $this->db->from("joblist");
+        $this->db->where("status", 3);
+        $this->db->where("YEAR(completed_date)", $year);
+        $this->db->where("completed_date IS NOT NULL", null, false);
+        $this->db->where("recieved_on IS NOT NULL", null, false);
+        $this->db->group_by(["assignment_type", "MONTH(completed_date)"]);
+        $this->db->order_by("month ASC");
+    
+        $result = $this->db->get()->result();
+    
+        if (empty($result)) {
+            $sample_data = [];
+            $assignment_types = ['Bookkeeping / VAT', 'Year end account', 'Tax return']; // you can add more types if needed
+    
+            foreach (range(1, 12) as $month) {
+                foreach ($assignment_types as $type) {
+                    $sample_data[] = (object)[
+                        'assignment_type' => $type,
+                        'month' => $month,
+                        'avg_days' => rand(1, 10) + round(rand(0, 9) / 10, 1) // random avg days e.g., 5.7
+                    ];
+                }
+            }
+    
+            return $sample_data;
+        }
+    
+        return $result;
+    }
     
     
     
