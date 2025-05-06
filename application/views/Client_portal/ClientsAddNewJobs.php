@@ -675,7 +675,7 @@
                   <th>Accountancy Fees (Net):</th>
                   <td class="m_fee"></td>
                 </tr>
-                <tr class="otherComment fldother">
+                <tr class="otherComment fldother L678">
                   <th>Additional Comments:</th>
                   <td class="m_comments"></td>
                 </tr>
@@ -710,12 +710,18 @@
 
           </div>
           <div class="col-md-6 ">
-		  <tr class="">
-                  <th>Additional Comments:</th>
-                  <td class="m_comments"></td>
-                </tr>
+		    <table class="table table-bordered">
+				<tbody class="iAddComm L714">
+					<tr class="">
+						<th>Additional Comments:</th>
+					</tr>
+                    <tr>
+                        <td class="m_comments"></td>
+                    </tr>
+				</tbody>
+			</table>
             <table class="table table-bordered">
-              <tbody class="previewEmployement">
+              <tbody class="previewEmployement L722">
 			    <tr>
                     <td width="50">1</td>
                     <td>Employment</td>
@@ -751,6 +757,14 @@
 		// $('.customer-form-submiter').prop('disabled', true);
 
         $('#job_code').on('change', function () {
+				
+			$('#other_show').fadeIn();
+                $('#tax_year').show();
+                $('#bookkepping_tax_year').show();
+                $('#accountancy_fee').show();
+                $('#year_end').show();
+
+
             if ($(this).val() === 'personal_tax_return') {
                 $('#personal_tax_return_show').fadeIn();
                 $('#bookkepping_tax_year').hide();
@@ -945,14 +959,21 @@
 			const yearEnd    = formData.get('year_end')             || '';
 			const m_budget    = formData.get('budgeted_hours')      || '';
 			const m_fee    = formData.get('accountancy_fee_net')    || '';
-			const m_comments = formData.get('additional_comment')   || '';
+			let m_comments='';
+			if(assignment=='other'){
+				m_comments = formData.get('additiona_comment')   || '';
+			}else{
+			    m_comments = formData.get('additional_comment')   || '';
+			}
 			// …and so on for any other fields you want to preview
 
 			// Inject into your modal
 			if (assignment === 'other') {
 				// alert("ASdff");
+				$('.iAddComm').show();  //preview wala code
 				$('.fldother').hide();
 			}else{
+				$('.iAddComm').hide();  //preview wala code
 				$('.fldother').show();
 			}
 

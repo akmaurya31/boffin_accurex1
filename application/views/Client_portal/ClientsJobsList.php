@@ -134,7 +134,7 @@
 </style>
 <script>
     function convertKBtoMB(kb) {
-        const mb = kb / 1024;
+        const mb = (kb / 1024)/100;
         return mb.toFixed(2) + ' MB';
     }
 
@@ -396,7 +396,17 @@
           </div>
           <div class="col-md-6">
             <table class="table table-bordered">
-              <tbody class="previewEmployement">
+				<tbody class="iAddComm L714">
+					<tr class="">
+						<th>Additional Comments:</th>
+					</tr>
+                    <tr>
+                        <td class="m_comments"></td>
+                    </tr>
+				</tbody>
+			</table>
+            <table class="table table-bordered">
+              <tbody class="previewEmployement L399">
 			    <tr>
                     <td width="50">1</td>
                     <td>Employment</td>
@@ -623,8 +633,10 @@ function CshowPreviewModal(rs) {
 
     // Inject into your modal
     if (rs.job.assignment_type === 'other') {
+        $('.iAddComm').show();
         $('.fldother').hide();
     }else{
+        $('.iAddComm').hide();
         $('.fldother').show();
     }
 

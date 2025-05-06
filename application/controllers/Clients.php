@@ -71,7 +71,12 @@
             // $year_end = $this->input->post('year_end');
             $budgeted_hours = $this->input->post('budgeted_hours');
             $accountancy_fee_net = $this->input->post('accountancy_fee_net');
-            $additional_comment = $this->input->post('additional_comment');
+
+            if($assignment_type=='other'){
+                $additional_comment = $this->input->post('additiona_comment');
+            }else{
+                $additional_comment = $this->input->post('additional_comment');
+            }
 
             $lastJobId = $this->Client_model->getLastJobId();
             $nextId = $lastJobId + 1;

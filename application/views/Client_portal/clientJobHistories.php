@@ -170,6 +170,16 @@ ul.timeline > li:before {
                                 </p>
                             </li>
                             <?php endforeach; ?>
+
+                            <?php foreach($job_query as $jq):  ?>
+                            <li>
+                            <p><?php print_r($jq->comments);  ?>
+                            <a href="<?= base_url($file_path) ?>" target="_blank" class="float-right date_format">
+                                    <?= date('d M, Y h:i:s', strtotime($created_at)) ?>
+                                </a>   
+                                </p> 
+                            </li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>
