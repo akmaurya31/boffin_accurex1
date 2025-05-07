@@ -88,6 +88,11 @@ ul.timeline > li:before {
                 <div class="tab-content" id="tabs-tabContent">
                     <div class="tab-pane fade show active" id="tabs-live" role="tabpanel">
                         <ul class="timeline">
+
+
+                      
+
+
                             <?php foreach($job_notifications as $note):  
                                 $badeg_note=(object) get_job_status_details($note->n_status);
                                 ?>
@@ -104,7 +109,19 @@ ul.timeline > li:before {
                     </div>
                     <div class="tab-pane fade" id="tabs-hold" role="tabpanel">
                         <ul class="timeline">
+
+                        <?php foreach($job_query as $jq):  ?>
+                            <li>
+                            <p><?php print_r($jq->comments);  ?>
+                            <a href="<?= base_url($file_path) ?>" target="_blank" class="float-right date_format">
+                                    <?= date('d M, Y h:i:s', strtotime($created_at)) ?>
+                                </a>   
+                                </p> 
+                            </li>
+                       
+
                             <?php foreach($job_attachments as $ja): 
+                               if($jq->id!=$ja->job_query_id){ continue; }
                                 // Get file path, file name and type
                                 $file_path = $ja->file_path;
                                 $file_name = basename($file_path);
@@ -171,15 +188,8 @@ ul.timeline > li:before {
                             </li>
                             <?php endforeach; ?>
 
-                            <?php foreach($job_query as $jq):  ?>
-                            <li>
-                            <p><?php print_r($jq->comments);  ?>
-                            <a href="<?= base_url($file_path) ?>" target="_blank" class="float-right date_format">
-                                    <?= date('d M, Y h:i:s', strtotime($created_at)) ?>
-                                </a>   
-                                </p> 
-                            </li>
-                            <?php endforeach; ?>
+                      <?php endforeach; ?>
+ 
                         </ul>
                     </div>
                 </div>

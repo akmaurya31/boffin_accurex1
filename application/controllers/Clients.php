@@ -116,10 +116,9 @@
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ];
-    
+
             // Insert data into the database using the model function
             $inserted = $this->Client_model->insert_job($data);
-    
             // Prepare the JSON response
             if ($inserted) {
                 // Success response
@@ -143,7 +142,7 @@
                 }
 
                 // 2. Upload Attachments
-                $this->upload_attachments($jobcode); // this saves files to job_attachments table
+                $this->upload_attachments($jobcode,'0','send_new_job'); // this saves files to job_attachments table
                  
                 $noti_data=array();
                 $noti_data['client_id']=$user_id;	
@@ -190,7 +189,7 @@
             return $data;
         }
         
-        public function upload_attachments($job_code)
+        public function upload_attachments($job_code,$last_id,$where_from)
         {
             // $job_code = $this->input->post('job_code');
             $files = $_FILES;
@@ -235,7 +234,8 @@
                             'job_code' => $job_code,
                             'file_path' => 'uploads/job_attachments/' . $data['file_name'],
                             'file_size' =>  $file_size,
-                            'where_from' => 'send_query'
+                            'where_from' => $where_from,
+                            'job_query_id' => $last_id,
                         ];
                     }
                 }
@@ -659,7 +659,11 @@
         $checklist = $this->db->where('jobcode', $jobcode)->get('job_checklist')->result_array();
 
         // job_attachments table -> multiple records
-        $attachments = $this->db->where('job_code', $jobcode)->get('job_attachments')->result_array();
+        $attachments = $this->db
+        ->where('job_code', $jobcode)
+        ->where('where_from', 'send_new_job')
+        ->get('job_attachments')
+        ->result_array();
 
         // Fetch all checklists using the helper function
         $checklists = getAllChecklists();
@@ -691,13 +695,21 @@
                 'jobcode' => $job_code,
                 'where_from'=> 'send_query'
             ]);
-            
+            $last_id = $this->db->insert_id();            
             // Set a flash message for success
             $this->session->set_flashdata('success_message', 'Form submitted successfully!');
         }
 
+        // // Step 1: Make sure $job_code is an array
+        // if (!is_array($job_code)) {
+        //     $job_code = [$job_code];
+        // }
+        // // Step 2: Add last_id to the array
+        // $job_code[] = $last_id;
+        // // print_r($job_code); die("ASDfa");
+
         // Upload attachments
-        $this->upload_attachments($job_code);
+        $this->upload_attachments($job_code,$last_id,'send_query');
 
         // Load the view
         $this->load->view('Client_portal/ClientsJobsList', $data);
@@ -752,6 +764,7 @@
         $data['job'] = $this->Client_model->findJobByCode($jobcode);
         // Job Query List
         $data['job_query'] = $this->db->where('jobcode', $jobcode)
+                                    ->where('where_from', 'send_query')
                                     ->get('job_query')
                                     ->result();
         // Job Notifications
@@ -760,9 +773,9 @@
                                             ->result();
         // Job Attachments
         $data['job_attachments'] = $this->db->where('job_code', $jobcode)
+                                            ->where('where_from', 'send_query')
                                             ->get('job_attachments')
                                             ->result();
-                                          
         $this->load->view('Client_portal/clientJobHistories', $data);
      }
 
