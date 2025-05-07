@@ -355,7 +355,7 @@
                 </tr>
 
                 <tr class="otherTaxyear fldother">
-                  <th>Tax Year:</th>
+                  <th id="tyear">Tax Year:</th>
                   <td class="m_taxyear"></td>
                 </tr>
 
@@ -655,12 +655,33 @@ function CshowPreviewModal(rs) {
     $('.m_person').text(rs.job.contact_person);
     $('.m_email').text(rs.job.email_address);
     $('.m_taxyear').text(rs.job.year_end);
+
+
+    if(rs.job.assignment_type=='year_end_account'){
+        $('.div_qtr_year_end').hide();
+        $('.iAddComm').hide();
+        $('.otherAccountancy').show();
+        $('#tyear').text('Year End:');
+    }else if(rs.job.assignment_type=='bookkeeping'){
+        $('.div_qtr_year_end').show();
+        $('.iAddComm').hide();
+        $('.otherAccountancy').show();
+        $('#tyear').text('Year:');
+    }else if(rs.job.assignment_type=='personal_tax_return'){
+        $('.iAddComm').hide();
+        $('.otherAccountancy').show();
+        $('#tyear').text('Tax Year:');
+    }else if(rs.job.assignment_type=='other'){
+        $('.iAddComm').show();
+        $('.otherAccountancy').hide();
+        $('#tyear').text('Year:');
+    }
+
     $('.m_qtr_year_end').text(rs.job.qtr_year_end);
     $('.m_budget').text(rs.job.budgeted_hours);
     $('.m_fee').text(rs.job.accountancy_fee_net);
     $('.m_comments').text(rs.job.additional_comment);
     $('.om_comments').text(rs.job.additional_comment);
-
     
     DisplayChecklist(rs)
     multipleAttach(rs)

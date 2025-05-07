@@ -172,7 +172,7 @@
 
 
 					<div class="form-group" id="bookkepping_tax_year_qy" style="display:none">
-						<label>Select Year <span>*</span></label>
+						<label>Year <span>*</span></label>
 						<select class="form-control" name="qtr_year_end_qy">
 							<option value="2020">2020</option>
 							<option value="2021">2021</option>
@@ -1022,16 +1022,20 @@
 
 			if(assignment=='year_end_account'){
 				$('.m_taxyear').text(yearEnd);
+				$('#taxyear').text('Year End:')
 			}else if(assignment=='bookkeeping'){
 				$('.m_taxyear').text(qtr_year_end_qy);
 				$('.m_qtr_year_end_qy').text(qtr_year_end);
+				$('#taxyear').text('Year:')
 			}else if(assignment=='personal_tax_return'){
 				$('.m_taxyear').text(taxYearEnd);
+				$('#taxyear').text('Tax Year:')
 			}else{
 				$('.fldother').hide();
 				$('.m_taxyear').text(qtr_year_end_qy);
 				$('.m_qtr_year_end_qy').text(qtr_year_end);
 				$('.om_comments').text(additiona_comment);
+				$('#taxyear').text('Year:')
 			}
 
 			// Inject into your modal
