@@ -306,7 +306,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" name="" class="btn btn-sm btn-purple">Submit</button>
+          <button type="submit" name="" class="btn btn-sm btn-purple">Submit</button>
           <button type="button" class="btn btn-sm btn-secondary dismiss" data-dismiss="modal">Close</button>
         </div>
     <?= form_close(); ?>

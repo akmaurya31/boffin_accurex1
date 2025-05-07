@@ -234,7 +234,8 @@
                         $uploaded_files[] = [
                             'job_code' => $job_code,
                             'file_path' => 'uploads/job_attachments/' . $data['file_name'],
-                            'file_size' =>  $file_size
+                            'file_size' =>  $file_size,
+                            'where_from' => 'send_query'
                         ];
                     }
                 }
@@ -679,6 +680,7 @@
     
     public function jobCommentForm()
     {
+       // die("ASda");
         $comments = $this->input->post('kcomments'); // Array of comments
         $job_code = $this->input->post('kjobcode');
         
@@ -686,7 +688,8 @@
             // Insert the comment into the database
             $this->db->insert('job_query', [
                 'comments' => $comments,
-                'jobcode' => $job_code
+                'jobcode' => $job_code,
+                'where_from'=> 'send_query'
             ]);
             
             // Set a flash message for success
