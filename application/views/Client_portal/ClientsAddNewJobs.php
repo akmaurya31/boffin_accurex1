@@ -120,18 +120,18 @@
 						<span class="error-msg"></span>
 					</div>
 					<div class="form-group">
-						<label>Contact Person <span>*</span></label>
+						<label>Contact Name <span>*</span></label>
 						<input type="text" class="form-control" name="contact_person">
 						<span class="error-msg"></span>
 					</div>
 					<div class="form-group">
 						<label>Email Address <span>*</span></label>
-						<input type="email" class="form-control" name="email_address" 
+						<input type="text" class="form-control" name="email_address" 
 						oninvalid="this.setCustomValidity('Please enter email in correct format')"
 						oninput="this.setCustomValidity('')">
 						<span class="error-msg"></span>
 					</div>
-					<div class="form-group" id="tax_year">
+					<div class="form-group" id="div_tax_year">
 						<label>Tax Year <span>*</span></label>
 						<select class="form-control" name="tax_year_end">
 							<option value="2020">2020</option>
@@ -142,19 +142,18 @@
 							<option value="2025">2025</option>
 						</select>
 						<span class="error-msg"></span>
-
 					</div>
-					<div class="form-group" name="year_end" id="year_end" style="display:none">
+					<div class="form-group" name="div_year_end" id="div_year_end" style="display:none">
 						<label>Year End <span>*</span></label>
 						<input type="date" class="form-control" name="year_end" id="year_end" placeholder="dd/mm/yyyy" />
 					
 						<span class="error-msg"></span>
 
 					</div>
+
 					<div class="form-group" id="bookkepping_tax_year" style="display:none">
 						<label>Quarter/Period <span>*</span></label>
 						<select class="form-control" name="qtr_year_end">
-								<option value="">Select Month</option>
 								<option value="January">January</option>
 								<option value="February">February</option>
 								<option value="March">March</option>
@@ -169,17 +168,36 @@
 								<option value="December">December</option>
 						</select>
 						<span class="error-msg"></span>
-
 					</div>
+
+
+					<div class="form-group" id="bookkepping_tax_year_qy" style="display:none">
+						<label>Select Year <span>*</span></label>
+						<select class="form-control" name="qtr_year_end_qy">
+							<option value="2020">2020</option>
+							<option value="2021">2021</option>
+							<option value="2022">2022</option>
+							<option value="2023">2023</option>
+							<option value="2024">2024</option>
+							<option value="2025">2025</option>
+							<option value="2026">2026</option>
+							<option value="2027">2027</option>
+							<option value="2028">2028</option>
+							<option value="2029">2029</option>
+							<option value="2030">2030</option>
+						</select>
+						<span class="error-msg"></span>
+					</div>
+
+
 					<div class="form-group" id="budget_year">
 						<label>Budgeted Hours</label>
 						<input type="text" class="form-control" name="budgeted_hours">
 					</div>
-					<div class="form-group" id="accountancy_fee">
+					<div class="form-group" id="accountancy_fee1">
 						<label>Accountancy Fee(Net) <span>*</span></label>
 						<input type="text" class="form-control" name="accountancy_fee_net">
 						<span class="error-msg"></span>
-
 					</div>
 					<div class="form-group">
 						<label>Select Attachments <span></span></label>
@@ -663,15 +681,22 @@
                   <th>Email:</th>
                   <td class="m_email"></td>
                 </tr>
-                <tr class="otherTaxyear fldother">
-                  <th>Tax Year:</th>
+
+				<tr id="qtr_year_end_qy" class="L686">
+                  <th>Quarter/Period:</th>
+                  <td class="m_qtr_year_end_qy"></td>
+                </tr>
+
+                <tr>
+                  <th id="taxyear">Year:</th>
                   <td class="m_taxyear"></td>
                 </tr>
+
                 <tr>
                   <th>Budgeted hours:</th>
                   <td class="m_budget"></td>
                 </tr>
-                <tr class="otherAccountancy fldother">
+                <tr>
                   <th>Accountancy Fees (Net):</th>
                   <td class="m_fee"></td>
                 </tr>
@@ -716,7 +741,7 @@
 						<th>Additional Comments:</th>
 					</tr>
                     <tr>
-                        <td class="m_comments"></td>
+                        <td class="om_comments"></td>
                     </tr>
 				</tbody>
 			</table>
@@ -758,19 +783,21 @@
 
         $('#job_code').on('change', function () {
 				
-			$('#other_show').fadeIn();
-                $('#tax_year').show();
+			    $('#other_show').fadeIn();
+                $('#div_tax_year').show();
                 $('#bookkepping_tax_year').show();
-                $('#accountancy_fee').show();
-                $('#year_end').show();
-
+                $('#bookkepping_tax_year_qy').show();
+                $('#div_year_end').show();
+				$('#qtr_year_end_qy').show();
 
             if ($(this).val() === 'personal_tax_return') {
                 $('#personal_tax_return_show').fadeIn();
                 $('#bookkepping_tax_year').hide();
-                $('#tax_year').show();
+                $('#bookkepping_tax_year_qy').hide();
+                $('#div_tax_year').show();
                 $('#additiona_comment').show();
-                $('#year_end').hide();
+                $('#div_year_end').hide();
+				$('#qtr_year_end_qy').hide();
                 
             } else {
                 $('#personal_tax_return_show').fadeOut();
@@ -779,30 +806,36 @@
             if ($(this).val() === 'year_end_account') {
                 $('#year_end_account_show').fadeIn();
                 $('#bookkepping_tax_year').hide();
-                $('#tax_year').hide();
+                $('#bookkepping_tax_year_qy').hide();
+                $('#div_tax_year').hide();
                 $('#additiona_comment').show();
-                $('#year_end').show();
+                $('#div_year_end').show();
+				$('#qtr_year_end_qy').hide();
+				$('#taxyear').text('Year End');
             } else {
                 $('#year_end_account_show').fadeOut();
             }
             
             if ($(this).val() === 'bookkeeping') {
                 $('#bookkeeping_show').fadeIn();
-                $('#tax_year').hide();
+                $('#div_tax_year').hide();
                 $('#bookkepping_tax_year').show();
+                $('#bookkepping_tax_year_qy').show();
                 $('#additiona_comment').show();
-                $('#year_end').hide();
+                $('#div_year_end').hide();
+				$('#qtr_year_end_qy').show();
             } else {
                 $('#bookkeeping_show').fadeOut();
             }
             
             if ($(this).val() === 'other') {
                 $('#other_show').fadeIn();
-                $('#tax_year').hide();
-                $('#bookkepping_tax_year').hide();
-                $('#accountancy_fee').hide();
+                $('#div_tax_year').hide();
+                $('#bookkepping_tax_year').show();
+                $('#bookkepping_tax_year').show();
                 $('#additiona_comment').hide();
-                $('#year_end').hide();
+                $('#div_year_end').hide();
+				$('#qtr_year_end_qy').show();
             } else {
                 $('#other_show').fadeOut();
             }
@@ -890,19 +923,48 @@
 				if ($('[name="contact_person"]').val().trim() === "") {
 					isValid = false;
 					$('[name="contact_person"]').css("border", "1px solid red");
-					$('[name="contact_person"]').closest('div').find('.error-msg').html("Contact person is required").css("color", "red").show();
+					$('[name="contact_person"]').closest('div').find('.error-msg').html("Contact Name is required").css("color", "red").show();
 				} else {
 					$('[name="contact_person"]').css("border", "");
 					$('[name="contact_person"]').closest('div').find('.error-msg').html("").hide();
 				}
 
+				if ($('[name="assignment_type"]').val().trim() == "year_end_account") {
+					// year_end validation
+					var date = $('#year_end').val().trim();
+					if (date === "") {
+						isValid = false;
+						// $('#year_end').css("border", "1px solid red");
+						$('#year_end').closest('div').find('.error-msg')
+							.html("Date is required")
+							.css("color", "red")
+							.show();
+					} else {
+						$('#year_end').css("border", "");
+						$('#year_end').closest('div').find('.error-msg').hide();
+					}
+				}
+
 				// Email validation
-				if ($('[name="email_address"]').val().trim() === "") {
-					isValid =false;
+				var email = $('[name="email_address"]').val().trim();
+				var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple email pattern
+				if (email === "") {
+					isValid = false;
 					$('[name="email_address"]').css("border", "1px solid red");
-					$('[name="email_address"]').closest('div').find('.error-msg').html("Email is required").css("color", "red").show();
+					$('[name="email_address"]').closest('div').find('.error-msg')
+						.html("Email is required")
+						.css("color", "red")
+						.show();
+				} else if (!emailRegex.test(email)) {
+					isValid = false;
+					$('[name="email_address"]').css("border", "1px solid red");
+					$('[name="email_address"]').closest('div').find('.error-msg')
+						.html("Please enter a valid email address")
+						.css("color", "red")
+						.show();
 				} else {
 					$('[name="email_address"]').css("border", "");
+					$('[name="email_address"]').closest('div').find('.error-msg').hide();
 				}
 
 				// Accountancy Fee validation
@@ -941,40 +1003,46 @@
 		}
 
 		function showPreviewModal(formData) {
-			// Extract just the bits you need
 			for (let [key, value] of formData.entries()) {
 				console.log(key, ":", value);
 			}
-
-			 // Group all checklists by assignment_type
-			
-
-			// console.log(checklistData,"checklistData"); 
-
 			const assignment = formData.get('assignment_type')      || '';
 			const client     = formData.get('client_name')          || '';
 			const person     = formData.get('contact_person')       || '';
 			const email      = formData.get('email_address')        || '';
 			const taxYearEnd = formData.get('tax_year_end')         || '';
 			const yearEnd    = formData.get('year_end')             || '';
-			const m_budget    = formData.get('budgeted_hours')      || '';
-			const m_fee    = formData.get('accountancy_fee_net')    || '';
-			let m_comments='';
-			if(assignment=='other'){
-				m_comments = formData.get('additiona_comment')   || '';
+			const m_budget   = formData.get('budgeted_hours')      || '';
+			const m_fee      = formData.get('accountancy_fee_net')    || '';
+			const qtr_year_end    = formData.get('qtr_year_end')    || '';
+			const qtr_year_end_qy      = formData.get('qtr_year_end_qy')    || '';
+			const m_comments = formData.get('additional_comment') || '';
+			const additiona_comment = formData.get('additiona_comment') || '';
+			$('.m_comments').text(m_comments);
+
+			if(assignment=='year_end_account'){
+				$('.m_taxyear').text(yearEnd);
+			}else if(assignment=='bookkeeping'){
+				$('.m_taxyear').text(qtr_year_end_qy);
+				$('.m_qtr_year_end_qy').text(qtr_year_end);
+			}else if(assignment=='personal_tax_return'){
+				$('.m_taxyear').text(taxYearEnd);
 			}else{
-			    m_comments = formData.get('additional_comment')   || '';
+				$('.fldother').hide();
+				$('.m_taxyear').text(qtr_year_end_qy);
+				$('.m_qtr_year_end_qy').text(qtr_year_end);
+				$('.om_comments').text(additiona_comment);
 			}
-			// …and so on for any other fields you want to preview
 
 			// Inject into your modal
 			if (assignment === 'other') {
-				// alert("ASdff");
 				$('.iAddComm').show();  //preview wala code
-				$('.fldother').hide();
+				// $('.fldother').hide();
+				$('.qtr_year_end_qy').hide();
 			}else{
 				$('.iAddComm').hide();  //preview wala code
-				$('.fldother').show();
+				// $('.fldother').show();
+				$('.qtr_year_end_qy').show();
 			}
 
 			// Mapping object
@@ -991,11 +1059,10 @@
 			$('.m_client').text(client);
 			$('.m_person').text(person);
 			$('.m_email').text(email);
-			$('.m_taxyear').text(taxYearEnd);
+			$('.m_email').text(email);
 			$('.m_budget').text(m_budget);
 			$('.m_fee').text(m_fee);
-			$('.m_comments').text(m_comments);
-
+			
 			const items = checklistData[assignment] || [];
 			const $tbody = $('.previewEmployement');
 			$tbody.empty();

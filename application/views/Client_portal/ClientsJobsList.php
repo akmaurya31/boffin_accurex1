@@ -348,15 +348,22 @@
                   <th>Email:</th>
                   <td class="m_email"></td>
                 </tr>
+
+                <tr class="div_qtr_year_end">
+                  <th>Quarter/Period:</th>
+                  <td class="m_qtr_year_end"></td>
+                </tr>
+
                 <tr class="otherTaxyear fldother">
                   <th>Tax Year:</th>
                   <td class="m_taxyear"></td>
                 </tr>
+
                 <tr>
                   <th>Budgeted hours:</th>
                   <td class="m_budget"></td>
                 </tr>
-                <tr class="otherAccountancy fldother">
+                <tr>
                   <th>Accountancy Fees (Net):</th>
                   <td class="m_fee"></td>
                 </tr>
@@ -401,7 +408,7 @@
 						<th>Additional Comments:</th>
 					</tr>
                     <tr>
-                        <td class="m_comments"></td>
+                        <td class="om_comments"></td>
                     </tr>
 				</tbody>
 			</table>
@@ -631,23 +638,30 @@ function CshowPreviewModal(rs) {
         'other':               'Other'
     };
 
-    // Inject into your modal
-    if (rs.job.assignment_type === 'other') {
-        $('.iAddComm').show();
-        $('.fldother').hide();
-    }else{
-        $('.iAddComm').hide();
-        $('.fldother').show();
-    }
+    // $('.iAddComm').show();
+    // $('.fldother').hide();
+    // if (rs.job.assignment_type === 'other') {
+    // } else if (rs.job.assignment_type === 'other') {
+    // } else if (rs.job.assignment_type === 'other') {
+    // }else{
+    // }
+    // else{
+    //     $('.iAddComm').hide();
+    //     $('.fldother').show();
+    // }
 
     $('.m_assignment').text(assignmentSort[rs.job.assignment_type]);
     $('.m_client').text(rs.job.client_name);
     $('.m_person').text(rs.job.contact_person);
     $('.m_email').text(rs.job.email_address);
     $('.m_taxyear').text(rs.job.year_end);
+    $('.m_qtr_year_end').text(rs.job.qtr_year_end);
     $('.m_budget').text(rs.job.budgeted_hours);
     $('.m_fee').text(rs.job.accountancy_fee_net);
     $('.m_comments').text(rs.job.additional_comment);
+    $('.om_comments').text(rs.job.additional_comment);
+
+    
     DisplayChecklist(rs)
     multipleAttach(rs)
 }

@@ -88,13 +88,15 @@
 
             $year_end = '';
             if ($assignment_type === 'year_end_account') {
-                $year_end = $this->input->post('year_end');
+                $year_end = $this->input->post('year_end'); 
             } elseif ($assignment_type === 'bookkeeping') {
-                $year_end = $this->input->post('qtr_year_end');
+                $qtr_year_end = $this->input->post('qtr_year_end');
+                $year_end = $this->input->post('qtr_year_end_qy');
             } elseif ($assignment_type === 'personal_tax_return') {
                 $year_end = $this->input->post('tax_year_end');
             } else {
-                $year_end = $this->input->post('year_end');
+                $qtr_year_end = $this->input->post('qtr_year_end');
+                $year_end = $this->input->post('qtr_year_end_qy');
             }
 
             // Prepare the data array to insert into database
@@ -106,6 +108,7 @@
                 'contact_person' => $contact_person,
                 'email_address' => $email_address,
                 'year_end' => $year_end,
+                'qtr_year_end' => $qtr_year_end,
                 'budgeted_hours' => $budgeted_hours,
                 'accountancy_fee_net' => $accountancy_fee_net,
                 'additional_comment' => $additional_comment,
