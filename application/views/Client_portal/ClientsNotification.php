@@ -172,7 +172,7 @@ function loadNotifications(page) {
         $('#notifications-table tbody').append(`
           <tr class="${notification.notifi_isread}"  data-id="${notification.notif_id}"> 
             <td>${(page - 1) * 20 + (index + 1)}</td>
-            <td>${notification.notif_id} ${notification.job_name}</td>
+            <td>${notification.job_name}</td>
             <td><span class="badge ${notification.badge_color}">${notification.status_name}  </span></td>
             <td><span > ${notification.sub_status}</span></td>
             <td>${notification.created_at}</td>

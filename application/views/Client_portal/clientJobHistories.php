@@ -138,9 +138,9 @@ ul.timeline > li:before {
                                 </span>
                                 <small class="text-muted ml-2">(<?= $badge_note['sub_status'] ?? 'Uploaded' ?>)</small>
                     
-                                <a href="<?= base_url($file_path) ?>" target="_blank" class="float-right date_format">
+                                <!-- <a href="<?= base_url($file_path) ?>" target="_blank" class="float-right date_format">
                                     <?= date('d M, Y h:i:s', strtotime($created_at)) ?>
-                                </a>
+                                </a> -->
                     
                     
                                 <?php

@@ -254,6 +254,10 @@ if (!function_exists('generate_job_title_from_code')) {
         $CI =& get_instance(); // Get CodeIgniter instance
         $CI->load->database(); // Load DB
 
+        $userDetails =  $CI->session->userdata('accurexClientLoginDetails'); 
+        $letters=getsortname($userDetails->full_name);
+      //  $jobname = $letters. $currentYear . str_pad($nextId, 5, '0', STR_PAD_LEFT);
+
         $job = $CI->db->where('jobcode', $jobcode)->get('joblist')->row();
 
         if (!$job) {
@@ -262,9 +266,13 @@ if (!function_exists('generate_job_title_from_code')) {
 
         $short_type = strtoupper(substr($job->assignment_type, 0, 3));
 
+            // BK/VAT-August-25 for VAT
+            // OTH-August-25 for Other
+
         if ($short_type === 'BOO') {
-            $final_type     = 'VAT';
-            $formatted_date = '31-07-' . $job->year_end;
+            $final_type     = 'BK/VAT';
+            // $formatted_date = '31-07-' . $job->year_end;
+            $formatted_date = $job->qtr_year_end.'-'.$job->year_end;
         } elseif ($short_type === 'PER') {
             $final_type     = 'PTR';
             $formatted_date = '05-04-' . $job->year_end;
@@ -273,12 +281,11 @@ if (!function_exists('generate_job_title_from_code')) {
             $formatted_date = $job->year_end;
         } else {
             $final_type     = 'OTH';
-            $formatted_date = date('d-m-Y', strtotime($job->created_at));
+            // $formatted_date = date('d-m-Y', strtotime($job->created_at));
+            $formatted_date = $job->qtr_year_end.'-'.$job->year_end;
         }
-
-        $FirstNameLastName = "RS";
-
-        return "{$job->client_name}-{$final_type}-{$formatted_date}({$FirstNameLastName})";
+        // $FirstNameLastName = "RS";
+        return "{$job->client_name}-{$final_type}-{$formatted_date}({$letters})";
     }
 } 
 

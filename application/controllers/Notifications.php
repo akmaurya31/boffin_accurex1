@@ -63,13 +63,13 @@ class Notifications extends CI_Controller
 
 
     foreach ($jobs as &$job) {
-        $job->job_name = generate_job_title(
-            $job->client_name,
-            $job->assignment_type,
-            $job->year_end,
-            $job->created_at
-        );
-        
+        // $job->job_name = generate_job_title(
+        //     $job->client_name,
+        //     $job->assignment_type,
+        //     $job->year_end,
+        //     $job->created_at
+        // );
+        $job->job_name = generate_job_title_from_code($job->jobcode);
         $status_details = get_job_status_details($job->n_status);
         $job->status_name = $status_details['status']; // Store the status
         $job->sub_status = $status_details['sub_status']; // Store the sub-status
