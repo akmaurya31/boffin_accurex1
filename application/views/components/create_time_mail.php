@@ -2,7 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title><?php echo $subject; ?> - Job Added Successfully</title>
+ 
+  <title><?php echo $jobcode; ?> - Job Added Successfully</title>
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f2f2f2; padding: 20px;">
   <table width="100%" style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 8px; border: 1px solid #ddd;">
@@ -18,10 +19,9 @@
         <p style="font-size: 16px; color: #333;">We are pleased to inform you that a new job has been added to your account. Below are the job details:</p>
 
         <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; color: #333;">
-          <p style="margin: 8px 0;"><strong>Job Code:</strong> <?php echo $jobcode?></p>
-          <p style="margin: 8px 0;"><strong>Job Name:</strong> target-PTR-05-04-2024(MM)</p>
-          <p style="margin: 8px 0;"><strong>Received On:</strong> 09/05/2025</p>
-          <p style="margin: 8px 0;"><strong>Job Comments:</strong> testing</p>
+          <p style="margin: 8px 0;"><strong>Job Code:</strong> <?php echo $jobcode ?></p>
+          <p style="margin: 8px 0;"><strong>Job Name:</strong><?php echo $job_name ?></p>
+          <p style="margin: 8px 0;"><strong>Job Comments:</strong> <?php echo $additional_comment?></p>
         </div>
 
         <p style="font-size: 16px; color: #333;">If you have any questions or need further assistance, feel free to reach out to our support team.</p>

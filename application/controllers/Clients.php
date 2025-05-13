@@ -152,11 +152,22 @@
                 $noti_data['is_read']=0;
                 add_notification($noti_data);
 
+                $maildata['job_name'] = generate_job_title(
+                    $data['client_name'],
+                    $data['assignment_type'],
+                    $data['year_end'],
+                    $data['created_at']
+                );
+
+                $maildata['client_name']=$client_name;
+                $maildata['jobcode']=$jobcode;
+                $maildata['username']=$userDetails->full_name;
+                $maildata['additional_comment']=$additional_comment;
 
                 $mail_params['to'] =$userDetails->email;
                 $mail_params['subject'] ='New Job Added';
                 $mail_params['view'] ='components/create_time_mail';
-                $mail_params['data'] =$noti_data;
+                $mail_params['data'] =$data;
                 send_custom_email($mail_params);
 
                 $response = [
