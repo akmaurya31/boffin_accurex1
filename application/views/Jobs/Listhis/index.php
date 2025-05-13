@@ -57,13 +57,7 @@ ul.timeline > li:before {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <div class="page-content">
-  <!-- Breadcrumb -->
-  <div class="container">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="#">Home</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Job History </li>
-    </ol>
-  </div>
+ 
    <!-- Dashboard Header -->
 		<div class="container history">
 			<div class="dashboard-tab-wrapper mb-3 py-2">
@@ -88,6 +82,11 @@ ul.timeline > li:before {
                 <div class="tab-content" id="tabs-tabContent">
                     <div class="tab-pane fade show active" id="tabs-live" role="tabpanel">
                         <ul class="timeline">
+
+
+                      
+
+
                             <?php foreach($job_notifications as $note):  
                                 $badeg_note=(object) get_job_status_details($note->n_status);
                                 ?>
@@ -104,7 +103,19 @@ ul.timeline > li:before {
                     </div>
                     <div class="tab-pane fade" id="tabs-hold" role="tabpanel">
                         <ul class="timeline">
+
+                        <?php foreach($job_query as $jq):  ?>
+                            <li>
+                            <p><?php print_r($jq->comments);  ?>
+                            <a href="<?= base_url($file_path) ?>" target="_blank" class="float-right date_format">
+                                    <?= date('d M, Y h:i:s', strtotime($created_at)) ?>
+                                </a>   
+                                </p> 
+                            </li>
+                       
+
                             <?php foreach($job_attachments as $ja): 
+                               if($jq->id!=$ja->job_query_id){ continue; }
                                 // Get file path, file name and type
                                 $file_path = $ja->file_path;
                                 $file_name = basename($file_path);
@@ -121,9 +132,9 @@ ul.timeline > li:before {
                                 </span>
                                 <small class="text-muted ml-2">(<?= $badge_note['sub_status'] ?? 'Uploaded' ?>)</small>
                     
-                                <a href="<?= base_url($file_path) ?>" target="_blank" class="float-right date_format">
+                                <!-- <a href="<?= base_url($file_path) ?>" target="_blank" class="float-right date_format">
                                     <?= date('d M, Y h:i:s', strtotime($created_at)) ?>
-                                </a>
+                                </a> -->
                     
                     
                                 <?php
@@ -170,6 +181,9 @@ ul.timeline > li:before {
                                 </p>
                             </li>
                             <?php endforeach; ?>
+
+                      <?php endforeach; ?>
+ 
                         </ul>
                     </div>
                 </div>

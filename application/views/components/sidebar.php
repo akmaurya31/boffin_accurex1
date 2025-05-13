@@ -78,7 +78,7 @@
                     
                     <?php if($this->user_lib->is_has_access('4')){?>
                         <li class="<?php echo ($page == 'Task' || $page == 'Task/List') ? 'active' : '';?>">
-                            <a href="<?php echo base_url('RecievedClientsJob');?>">
+                            <a href="<?php echo base_url('RecievedClientsJob/draft-job');?>">
                                 <i class="fa fa-tasks"></i>
                                 <span>Job List</span>
                             </a>

@@ -63,7 +63,7 @@ class RecievedClientsJob extends CI_Controller {
         $query = $this->db->query("SELECT * FROM users WHERE role_ID = 4");
         $result = $query->result();
         $data['userlist'] = $query->result();
-    
+        $data['uri2']=$this->uri->segment(2);
         $this->load->view('index', $data);
     }
 
@@ -118,14 +118,20 @@ class RecievedClientsJob extends CI_Controller {
 
     public function fetch_paginated_jobs() 
     {
-       
         $limit = $this->input->get('limit') ?? 20;
         $page = $this->input->get('page') ?? 1;
         $offset = ($page - 1) * $limit;
         
         $search_code = $this->input->get('search0') ?? '';
         $search_name = $this->input->get('search1') ?? '';
-         $status_label = $this->input->get('status');
+        $status_label = $this->input->get('status');
+
+        $this->session->set_userdata(
+                array(
+                    'RecievedClientsJob_tabs'   => $status_label,
+                    'RecievedClientsJob_page'   => $page
+                )
+            );
 
         $status_map = [
             'live' => 1,
@@ -134,8 +140,6 @@ class RecievedClientsJob extends CI_Controller {
             'completed' => 4
         ];
 
-
-
         $status = isset($status_map[$status_label]) ? $status_map[$status_label] : '5';
 
         $filters = [
@@ -143,24 +147,10 @@ class RecievedClientsJob extends CI_Controller {
             'search_name' => $search_name,
             'status' => $status
         ];
-        // print_r($filters); die("ASdfa");
 
         $total = 0;
         $jobs = $this->RecievedClient_model->extra_get_filtered_jobs($limit, $offset, $filters, $total);
-
-        // print_r($jobs);
-        // die("ASdfa");
-
-
-        // foreach ($jobs as &$job) {
-        //     // print_r($job); die("ASdfas");
-        //     $job->job_name = $this->generate_job_title(
-        //         $job->client_name,
-        //         $job->assignment_type,
-        //         $job->created_at
-        //     );
-        // }
-
+        
         foreach ($jobs as &$job) {
             $job['job_name'] = generate_job_title(
                 $job['client_name'],
@@ -172,12 +162,7 @@ class RecievedClientsJob extends CI_Controller {
             $job['status_name'] = $status_details['status']; // Store the status
             $job['sub_status'] = $status_details['sub_status']; // Store the sub-status
             $job['badge_color'] = $status_details['badge_color']; // Store the badge color   
-
-             //$dd=get_assigned_job_by_jobid($job['id']);
-           //  print_r($dd); die("ASdfa");
-
             $job['employee'] = get_assigned_job_by_jobid($job['id'])->full_name; // Store the badge color   
-                 
         }
         
         echo json_encode([
@@ -208,5 +193,32 @@ class RecievedClientsJob extends CI_Controller {
 
     echo json_encode(['status' => true, 'message' => 'User assigned successfully']);
 }
+
+
+     public function clientJobHistories($jobcode = null)
+     {
+        $sessionData = $this->session->userdata('accurexClientLoginDetails'); 
+        $user_id = $sessionData->user_ID;
+
+        $data['page'] = 'Jobs/Listhis';
+        // Job basic info
+        $data['job'] = $this->Client_model->findJobByCode($jobcode);
+        // Job Query List
+        $data['job_query'] = $this->db->where('jobcode', $jobcode)
+                                    ->where('where_from', 'send_query')
+                                    ->get('job_query')
+                                    ->result();
+        // Job Notifications
+        $data['job_notifications'] = $this->db->where('jobcode', $jobcode)
+                                            ->get('job_notifications')
+                                            ->result();
+        // Job Attachments
+        $data['job_attachments'] = $this->db->where('job_code', $jobcode)
+                                            ->where('where_from', 'send_query')
+                                            ->get('job_attachments')
+                                            ->result();
+        // $this->load->view('Client_portal/clientJobHistories', $data);
+        $this->load->view('index', $data);
+     }
     
 }

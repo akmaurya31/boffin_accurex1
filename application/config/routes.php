@@ -92,20 +92,12 @@ $route['delete-client']                   = "Client/delete_user";
 $route['block-client/(:num)']             = "Client/block_user/$1";
 $route['active-client/(:num)']            = "Client/active_user/$1";
 
-// Task Routes
-$route['live-job']                      = "RecievedClientsJob";
-// $route['hold-job']                      = "RecievedClientsJob";
-// $route['completed-job']                      = "RecievedClientsJob";
-// $route['draft-job']                      = "RecievedClientsJob";
-// $route['view-history']                      = "RecievedClientsJob";
-
-
-
-// $route['live-job']                      = "RecievedClientsJob/live_job";
-// $route['hold-job']                      = "RecievedClientsJob/hold_job";
-// $route['completed-job']                 = "RecievedClientsJob/completed_job";
-// $route['draft-job']                     = "RecievedClientsJob/draft_job";
-// $route['view-history']                  = "RecievedClientsJob/view_history";
+ 
+$route['RecievedClientsJob/live-job']                      = "RecievedClientsJob/index";
+$route['RecievedClientsJob/hold-job']                      = "RecievedClientsJob/index";
+$route['RecievedClientsJob/completed-job']                 = "RecievedClientsJob/index";
+$route['RecievedClientsJob/draft-job']                     = "RecievedClientsJob/index";
+$route['RecievedClientsJob/view-history']                  = "RecievedClientsJob/index";
 
 
 // Notification Routes
@@ -148,6 +140,7 @@ $route['FetchBarCharti/(:num)']         = 'Clients/FetchBarCharti/$1';
 
 $route['clientJobHistories/(:any)'] = 'Clients/clientJobHistories/$1';
 
+$route['RecievedClientsJobHistories/(:any)'] = 'RecievedClientsJob/clientJobHistories/$1';
 
 $route['RecievedClientsJob']        = 'RecievedClientsJob/index';
 
