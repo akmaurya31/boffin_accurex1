@@ -152,6 +152,13 @@
                 $noti_data['is_read']=0;
                 add_notification($noti_data);
 
+
+                $mail_params['to'] =$userDetails->email;
+                $mail_params['subject'] ='New Job Added';
+                $mail_params['view'] ='components/create_time_mail';
+                $mail_params['data'] =$noti_data;
+                send_custom_email($mail_params);
+
                 $response = [
                     'status' => 'success',
                     'message' => 'Thank you! Your form has been successfully submitted.'

@@ -305,3 +305,22 @@ if (!function_exists('get_assigned_job_by_jobid')) {
 }
 
 
+if (!function_exists('send_custom_email')) {
+    function send_custom_email($params = []) {
+        $CI = &get_instance(); // Get CI super object
+
+        $to_email   = $params['to']        ?? '';
+        $subject    = $params['subject']   ?? 'No Subject';
+        $view       = $params['view']      ?? '';
+        $data       = $params['data']      ?? [];
+
+        // if (!$to_email || !$view) {
+        //     return false; // Required fields missing
+        // }
+
+        $message = $CI->load->view($view, $data, true);
+        return $CI->sentMailToClient($to_email, $subject, $message);
+    }
+}
+
+
