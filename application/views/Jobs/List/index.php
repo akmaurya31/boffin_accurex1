@@ -122,18 +122,24 @@
                         </li>
                       
                     </ul>
+
+<!-- 🔍 Common Search Inputs -->
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr colspan="7">
+                <th style="width: 140px;"><input type="text" class="form-control" placeholder="Please Enter Searching Keywords"></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
                 </div>
                 
                 <div class="card-block">
                     <?php if($uri2 == 'live-job'){?>
-                        <div class="row form-group">
-                            <div class="col-md-12">
-                                <div class="search-box">
-                                    <input type="search" class="form-control" name="search" placeholder="Please Enter Searching Keywords">
-                                </div>
-                            </div>
-                        </div>
-                        
+                         
                         <div class="row form-group">
                             <div class="col-md-12 tab-pane fade1" id="tabs-live" role="tabpanel">
                                 <div class="table-responsive">
@@ -160,13 +166,7 @@
                     <?php }?>
                     
                     <?php if($uri2 == 'hold-job'){?>
-                        <div class="row form-group">
-                            <div class="col-md-12">
-                                <div class="search-box">
-                                    <input type="search" class="form-control" name="search" placeholder="Please Enter Searching Keywords">
-                                </div>
-                            </div>
-                        </div>
+                       
                         
                         <div class="row form-group">
                             <div class="col-md-12 tab-pane fade1" id="tabs-hold" role="tabpanel">
@@ -194,13 +194,7 @@
                     <?php }?>
                     
                     <?php if($uri2 == 'completed-job'){?>
-                        <div class="row form-group">
-                            <div class="col-md-12">
-                                <div class="search-box">
-                                    <input type="search" class="form-control" name="search" placeholder="Please Enter Searching Keywords">
-                                </div>
-                            </div>
-                        </div>
+                      
                         
                         <div class="row form-group">
                           <div class="col-md-12 tab-pane fade1" id="tabs-completed" role="tabpanel">
@@ -228,13 +222,7 @@
                     <?php }?>
                     
                     <?php if($uri2 == 'draft-job'){?>
-                        <div class="row form-group">
-                            <div class="col-md-12">
-                                <div class="search-box">
-                                    <input type="search" class="form-control" name="search" placeholder="Please Enter Searching Keywords">
-                                </div>
-                            </div>
-                        </div>
+                        
                         
                         <div class="row form-group">
                              <div class="col-md-12 tab-pane fade1" id="tabs-draft" role="tabpanel">
