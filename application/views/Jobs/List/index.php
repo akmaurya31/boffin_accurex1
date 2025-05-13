@@ -451,11 +451,14 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.status === true) {
-
+        
                     // alert('Job assigned successfully!');
                     $('#QassignJobModel').modal('hide');
                     $('#assignJobForm')[0].reset();
                     toastr.success(response.message);
+                     setTimeout(function() {
+                        location.reload();
+                    }, 500); 
                 } else {
                     // alert('Failed: ' + response.message);
                       toastr.error(response.message);
@@ -488,7 +491,7 @@ function formatDate(dateStr) {
 $(document).ready(function () {
     let FullcurrentTab = "<?php echo $uri2; ?>";
     let currentTab = FullcurrentTab.replace('-job', '');
-    let currentPage = 1;
+    let currentPage = "<?php echo (!empty($RecievedClientsJob_page) && $RecievedClientsJob_page != 0) ? $RecievedClientsJob_page : 1; ?>";
 
     function loadJobs(tabType, page = 1) {
         currentTab = tabType;
@@ -516,7 +519,6 @@ $(document).ready(function () {
                 } else {
                     rdata.jobs.forEach(job => {
                         const jobDate = formatDate(job.created_at); 
-                    
                         rows += `
                             <tr>
                                 <td>${job.jobcode}</td>
@@ -524,7 +526,7 @@ $(document).ready(function () {
                                 <td><span class='badge ${job.badge_color} '>${job.status_name}</span></td>
                                 <td>${job.sub_status}</td>
                                 <td>${jobDate}</td>
-                                <td>${job.employee}</td>
+                                <td>${job.employee ?? ''}</td>
                                 <td class="actions">
                                     <a href="<?php echo base_url('RecievedClientsJobHistories');?>/${job.jobcode}" class="btn btn-light btn-search"><i class="fa fa-search"></i></a>
                                     <a href="javascript:void(0);" 

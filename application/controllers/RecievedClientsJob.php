@@ -64,6 +64,9 @@ class RecievedClientsJob extends CI_Controller {
         $result = $query->result();
         $data['userlist'] = $query->result();
         $data['uri2']=$this->uri->segment(2);
+
+        $sessionData = (object)$this->session->userdata();
+        $data['RecievedClientsJob_page']=$sessionData->RecievedClientsJob_page;
         $this->load->view('index', $data);
     }
 
