@@ -172,7 +172,11 @@ class RecievedClientsJob extends CI_Controller {
     }
 
 
-    public function assignuseronjob() {
+ public function assignuseronjob() {
+    $sessionData = $this->session->userdata('accurexClientLoginDetails'); 
+    $user_id = $sessionData->user_ID;
+
+
     $jid = $this->input->post('jid');
     $jobcode = $this->input->post('jobcode');
     $user = $this->input->post('user');
@@ -187,7 +191,24 @@ class RecievedClientsJob extends CI_Controller {
         'assigned_date' => date('Y-m-d H:i:s')
     ];
 
+    $query = $this->db->query("SELECT * FROM joblist WHERE jobcode = '$jobcode'");
+    $rs = $query->row();
+    $this->db->query("UPDATE joblist SET status = 1 WHERE jobcode = '$jobcode'");
     $this->db->insert('assigned_jobs', $data); // Change table as needed
+
+    $data = [
+        'job_id'     => $jid,
+        'jobcode'     => $jobcode,
+        'client_id'   => 0,
+        'old_status'  => $rs->status,
+        'new_status'  => 1,
+        'changed_by'  => 'admin',
+        'changed_by_id'  => $rs->user_id,
+        'remarks'     => 'Job approved by admin'
+    ];
+
+    $this->db->insert('job_status_log', $data);
+
 
     echo json_encode(['status' => true, 'message' => 'User assigned successfully']);
 }

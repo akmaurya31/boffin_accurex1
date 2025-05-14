@@ -270,11 +270,13 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
+                <label>Job Code</label>
+                  <input type="hidden" class="form-control" id="jjid" name="jid">
+                  <input type="text" readonly class="form-control py-2" id="jjobcode" name="jobcode">
+                  <br/>
+                  
                 <label>Select User</label>
-                <input type="hidden" class="form-control" id="jjid" name="jid">
-                <input type="hidden" class="form-control" id="jjobcode" name="jobcode">
-
-                <select class="form-control" name="user" required>
+                <select class="form-control py-2" name="user" required>
                   <option value="">Please Select...</option>
                   <?php foreach ($userlist as $u) { ?>
                     <option value="<?php echo $u->user_ID; ?>">

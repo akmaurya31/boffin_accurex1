@@ -259,9 +259,9 @@ if (!function_exists('generate_job_title_from_code')) {
         $job = $CI->db->where('jobcode', $jobcode)->get('joblist')->row();
 
         $userDetails =  $CI->session->userdata('accurexClientLoginDetails'); 
-        if($userDetails){
+        if(!empty($userDetails)){
             $letters=getsortname($userDetails->full_name);
-        }else{
+        }else{ 
             $user = $CI->db->where('user_ID', $job->user_id)->get('users')->row();
             $letters=getsortname($user->full_name);
         }
