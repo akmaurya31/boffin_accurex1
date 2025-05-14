@@ -152,13 +152,7 @@
                 $noti_data['is_read']=0;
                 add_notification($noti_data);
 
-                $maildata['job_name'] = generate_job_title(
-                    $data['client_name'],
-                    $data['assignment_type'],
-                    $data['year_end'],
-                    $data['created_at']
-                );
-
+                $maildata['job_name'] = generate_job_title_from_code($jobcode);
                 $maildata['client_name']=$client_name;
                 $maildata['jobcode']=$jobcode;
                 $maildata['username']=$userDetails->full_name;
@@ -167,7 +161,7 @@
                 $mail_params['to'] =$userDetails->email;
                 $mail_params['subject'] ='New Job Added';
                 $mail_params['view'] ='components/create_time_mail';
-                $mail_params['data'] =$data;
+                $mail_params['data'] =$maildata;
                 send_custom_email($mail_params);
 
                 $response = [
@@ -318,26 +312,8 @@
             $total = 0;
             $jobs = $this->Client_model->extra_get_filtered_jobs($limit, $offset, $filters, $total);
 
-            // print_r($jobs);
-            // die("ASdfa");
-        
-
-            // foreach ($jobs as &$job) {
-            //     // print_r($job); die("ASdfas");
-            //     $job->job_name = $this->generate_job_title(
-            //         $job->client_name,
-            //         $job->assignment_type,
-            //         $job->created_at
-            //     );
-            // }
-
             foreach ($jobs as &$job) {
-                $job['job_name'] = $this->generate_job_title(
-                    $job['client_name'],
-                    $job['assignment_type'],
-                    $job['year_end'],
-                    $job['created_at']
-                );
+                $job['job_name'] = generate_job_title_from_code($job['jobcode']);
                 $status_details = get_job_status_details($job['status']);
                 $job['status_name'] = $status_details['status']; // Store the status
                 $job['sub_status'] = $status_details['sub_status']; // Store the sub-status
@@ -366,23 +342,8 @@
 
             foreach ($jobs as &$job) {
                 // print_r($job); die("ASdfas");
-                $job->job_name = $this->generate_job_title(
-                    $job->client_name,
-                    $job->assignment_type,
-                    $job->year_end,
-                    $job->created_at
-                );
-
-                // $job['job_name'] = $this->generate_job_title(
-                //     $job['client_name'],
-                //     $job['assignment_type'],
-                //     $job['created_at']
-                // );
-
-                
+                $job->job_name = generate_job_title_from_code($job['jobcode']);
             }
-
-        
             echo json_encode([
                 'jobs' => $jobs,
                 'total' => $total

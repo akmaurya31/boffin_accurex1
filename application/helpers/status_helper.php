@@ -254,11 +254,17 @@ if (!function_exists('generate_job_title_from_code')) {
         $CI =& get_instance(); // Get CodeIgniter instance
         $CI->load->database(); // Load DB
 
-        $userDetails =  $CI->session->userdata('accurexClientLoginDetails'); 
-        $letters=getsortname($userDetails->full_name);
       //  $jobname = $letters. $currentYear . str_pad($nextId, 5, '0', STR_PAD_LEFT);
 
         $job = $CI->db->where('jobcode', $jobcode)->get('joblist')->row();
+
+        $userDetails =  $CI->session->userdata('accurexClientLoginDetails'); 
+        if($userDetails){
+            $letters=getsortname($userDetails->full_name);
+        }else{
+            $user = $CI->db->where('user_ID', $job->user_id)->get('users')->row();
+            $letters=getsortname($user->full_name);
+        }
 
         if (!$job) {
             return "Invalid Job Code";
