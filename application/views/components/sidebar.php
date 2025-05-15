@@ -6,6 +6,7 @@
                 .sidebar-menu li.active ul li a {
                     color: #9f9f9f;
                     background-color: #0c234d;
+                }
             </style>
             <ul>
                 <li class="menu-title">Main</li>
@@ -25,7 +26,7 @@
 
                         <li class="<?php echo ($page == 'Notification' || $page == 'Notification/Read' || $page == 'Notification/Create' || $page == 'Notification/List') ? 'active' : ''; ?> submenu">
 							<a href="<?php echo base_url('activities');?>">
-                                <i class="fa fa-bell-o"></i>
+                                <i class="ccc fa fa-bell-o"></i>
                                 <span>Notifications</span>
                                 <span class="badge badge-pill bg-navy float-right">
                                     <?php echo $countNotification;?>
@@ -34,6 +35,8 @@
 
 							<ul style="display: none;">
 								<li><a href="<?php echo base_url('activities');?>">Notifications List</a></li>
+								<li><a href="<?php echo base_url('AdminEmpNotify');?>">Employee Notification</a></li>
+
 								<li><a href="<?php echo base_url('create-notification');?>">Create Notification</a></li>
 								<li><a href="<?php echo base_url('sent-notifications');?>">Sent Notifications</a></li>
 							</ul>
@@ -84,6 +87,21 @@
                             </a>
                         </li>
                     <?php }?>
+
+
+                    <?php 
+                    $sessionData = (object)$this->session->userdata();
+                    if($sessionData->role_ID==4){
+                        ?>
+                            <li class="<?php echo ($page == 'Task' || $page == 'Task/List') ? 'active' : '';?>">
+                                <a href="<?php echo base_url('EmpClientsJob/live-job');?>">
+                                    <i class="fa fa-globe"></i>
+                                    <span>Job Listccc</span>
+                                </a>
+                            </li>
+                    <?php  } ?>
+
+
                 <!-- <li>
                     <a href="doctors.html"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
                 </li>

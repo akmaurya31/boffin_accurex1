@@ -691,6 +691,23 @@
         // Upload attachments
         $this->upload_attachments($job_code,$last_id,'send_query');
 
+        $sessionData = $this->session->userdata('accurexClientLoginDetails'); 
+        $user_id = $sessionData->user_ID;
+        $noti_data=array();
+        $noti_data['client_id']=$user_id;
+        $noti_data['jobcode']=$job_code;
+        $noti_data['message']="Send Some documents file and commnets by";
+        $noti_data['is_read']=0;
+        $this->db->insert('admin_job_notifications', $noti_data);
+
+        $user_id = $sessionData->user_ID;
+        $noti_data=array();
+        $noti_data['client_id']=$user_id;
+        $noti_data['jobcode']=$job_code;
+        $noti_data['message']="Send Some documents file and commnets";
+        $noti_data['is_read']=0;
+        $this->db->insert('emp_job_notifications', $noti_data);
+
         // Load the view
         $this->load->view('Client_portal/ClientsJobsList', $data);
     }

@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-sm-4 col-3">
-                <h4 class="page-title">Recived Client Job Lists</h4>
+                <h4 class="page-title"> Job Lists</h4>
             </div>
         </div>
         
@@ -105,20 +105,18 @@
 
                     
                         
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo $a;?>" href="<?php echo base_url('RecievedClientsJob/draft-job');?>" id="tabs-draft-tab" >Draft Job</a>
-                        </li>
+                       
                         
                         <li class="nav-item ">
-                            <a class="nav-link <?php echo $d;?>"  href="<?php echo base_url('RecievedClientsJob/live-job');?>" id="tabs-live-tab"  >Live Job</a>
+                            <a class="nav-link <?php echo $d;?>"  href="<?php echo base_url('EmpClientsJob/live-job');?>" id="tabs-live-tab"  >Live Job</a>
                         </li>
                       
                         <li class="nav-item"> 
-                            <a class="nav-link <?php echo $b;?>" href="<?php echo base_url('RecievedClientsJob/hold-job');?>" id="tabs-hold-tab"  >On Hold Job</a>
+                            <a class="nav-link <?php echo $b;?>" href="<?php echo base_url('EmpClientsJob/hold-job');?>" id="tabs-hold-tab"  >On Hold Job</a>
                         </li>
                           
                         <li class="nav-item">
-                            <a class="nav-link <?php echo $c;?>" href="<?php echo base_url('RecievedClientsJob/completed-job');?>" id="tabs-completed-tab"  >Completed Job</a>
+                            <a class="nav-link <?php echo $c;?>" href="<?php echo base_url('EmpClientsJob/completed-job');?>" id="tabs-completed-tab"  >Completed Job</a>
                         </li>
                       
                     </ul>
@@ -151,8 +149,7 @@
                                                 <th>Status</th>
                                                 <th>Emp Status</th>
                                                 <th>Received On</th>
-                                                <!-- <th>Job Comment</th> -->
-                                                <th>Assigned to</th>
+                                                <th>Job Comment</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -179,8 +176,7 @@
                                                 <th>Status</th>
                                                 <th>Emp Status</th>
                                                 <th>Received On</th>
-                                                <!-- <th>Job Comment</th> -->
-                                                <th>Assigned to</th>
+                                                <th>Job Comment</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -207,8 +203,7 @@
                                                 <th>Status</th>
                                                 <th>Emp Status</th>
                                                 <th>Received On</th>
-                                                <!-- <th>Job Comment</th> -->
-                                                <th>Assigned to</th>
+                                                <th>Job Comment</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -235,8 +230,7 @@
                                                 <th>Status</th>
                                                 <th>Emp Status</th>
                                                 <th>Received On</th>
-                                                <!-- <th>Job Comment</th> -->
-                                                <th>Assigned to</th>
+                                                <th>Job Comment</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -275,14 +269,12 @@
                   <input type="text" readonly class="form-control py-2" id="jjobcode" name="jobcode">
                   <br/>
                   
-                <label>Select User</label>
-                <select class="form-control py-2" name="user" required>
+                <label>Select Emp Status</label>
+                <select class="form-control py-2" name="emp_status" required>
                   <option value="">Please Select...</option>
-                  <?php foreach ($userlist as $u) { ?>
-                    <option value="<?php echo $u->user_ID; ?>">
-                      <?php echo $u->full_name; ?>
-                    </option>
-                  <?php } ?>
+                  <option value="1">In Progress</option>
+                  <option value="2">On Hold</option>
+                  <option value="4">Completed</option>
                 </select>
               </div>
 
@@ -448,7 +440,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('RecievedClientsJob/assignuseronjob'); ?>", // Replace 'YourController' with actual controller
+            url: "<?php echo base_url('EmpClientsJob/assignuseronjob'); ?>", // Replace 'YourController' with actual controller
             data: $(this).serialize(),
             dataType: "json",
             success: function (response) {
@@ -505,7 +497,7 @@ $(document).ready(function () {
         });
 
         $.ajax({
-            url: "<?= base_url('RecievedClientsJob/fetch_paginated_jobs') ?>",
+            url: "<?= base_url('EmpClientsJob/fetch_paginated_jobs') ?>",
             method: "GET",
             data: {
                 status: tabType,
@@ -525,10 +517,10 @@ $(document).ready(function () {
                             <tr>
                                 <td>${job.jobcode}</td>
                                 <td>${job.job_name}</td>
-                                <td><span class='badge ${job.badge_color} '>${job.status_name}</span></td>
-                                <td>${job.sub_status}</td>
+                                <td><span class='badge ${job.badge_color} '>${job.status_name}</span> <br/> ${job.sub_status}</td>
+                                <td>${job.emp_status_name}</td>
                                 <td>${jobDate}</td>
-                                <td>${job.employee ?? ''}</td>
+                                <td>${job.additional_comment ?? ''}</td>
                                 <td class="actions">
                                     <a href="<?php echo base_url('RecievedClientsJobHistories');?>/${job.jobcode}" class="btn btn-light btn-search"><i class="fa fa-search"></i></a>
                                     <a href="javascript:void(0);" 

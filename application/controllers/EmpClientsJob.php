@@ -1,18 +1,17 @@
 <?php
-class RecievedClientsJob extends CI_Controller {
+class EmpClientsJob extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
         if(!$this->session->userdata('loggedValue')){
             session_destroy();
             $this->session->set_flashdata('error','Login Error. Please Login again.');
-            redirect('Login');
         }else{
             $this->load->model('User_model');
             $this->load->model('Role_model');
             $this->load->model('Permission_model');
 
-            $this->load->model('RecievedClient_model');
+            $this->load->model('EmpClient_model');
 
             $this->load->library('form_validation');
             $this->load->library('pagination');
@@ -40,8 +39,9 @@ class RecievedClientsJob extends CI_Controller {
     // }
     
     public function index() {
-        $data['section'] = 'draft';
-        $data['page'] = 'Adminv/List';
+        $sessionData = (object)$this->session->userdata();
+        $data['section'] = 'live';
+        $data['page'] = 'Empv';
     
         $config['base_url'] = base_url('test/page');
         $config['total_rows'] = $this->db->where('status', 1)->count_all_results('joblist');
@@ -51,13 +51,15 @@ class RecievedClientsJob extends CI_Controller {
         $this->pagination->initialize($config);
     
         $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-    
-        $query = $this->db->select("*")
-                          ->from('joblist')
-                          ->where('status', 1)
-                          ->limit($config['per_page'], $page)
-                          ->get();
-    
+        $sql = "SELECT joblist.* 
+                FROM joblist 
+                JOIN assigned_jobs
+                    ON joblist.jobcode = assigned_jobs.job_code 
+                WHERE assigned_jobs.assigned_user_id = ? 
+                LIMIT ? OFFSET ?
+                ";
+
+        $query = $this->db->query($sql, array($sessionData->user_ID, $config['per_page'], $page));
         $data['new'] = $query->result();
 
         $query = $this->db->query("SELECT * FROM users WHERE role_ID = 4");
@@ -65,7 +67,7 @@ class RecievedClientsJob extends CI_Controller {
         $data['userlist'] = $query->result();
         $data['uri2']=$this->uri->segment(2);
 
-        $sessionData = (object)$this->session->userdata();
+      
         $data['RecievedClientsJob_page']=$sessionData->RecievedClientsJob_page;
         $this->load->view('index', $data);
     }
@@ -121,6 +123,7 @@ class RecievedClientsJob extends CI_Controller {
 
     public function fetch_paginated_jobs() 
     {
+        $sessionData = (object)$this->session->userdata();
         $limit = $this->input->get('limit') ?? 20;
         $page = $this->input->get('page') ?? 1;
         $offset = ($page - 1) * $limit;
@@ -152,12 +155,14 @@ class RecievedClientsJob extends CI_Controller {
         ];
 
         $total = 0;
-        $jobs = $this->RecievedClient_model->extra_get_filtered_jobs($limit, $offset, $filters, $total);
+        $jobs = $this->EmpClient_model->extra_get_filtered_jobs($limit, $offset, $filters, $total);
         
         foreach ($jobs as &$job) {
             $job['job_name'] = generate_job_title_from_code($job['jobcode']);
             $status_details = get_job_status_details($job['status']);
+            $emp_status_details = get_job_status_details($job['emp_status']);
             $job['status_name'] = $status_details['status']; // Store the status
+            $job['emp_status_name'] = $emp_status_details['status']; // Store the status
             $job['sub_status'] = $status_details['sub_status']; // Store the sub-status
             $job['badge_color'] = $status_details['badge_color']; // Store the badge color   
             $job['employee'] = get_assigned_job_by_jobid($job['id'])->full_name; // Store the badge color   
@@ -171,50 +176,42 @@ class RecievedClientsJob extends CI_Controller {
         ]);
     }
 
+
   public function assignuseronjob() {
         $user_id = $this->session->userdata('user_ID'); 
-        
-    
         //var_dump($user_id); die();
         $jid = $this->input->post('jid');
         $jobcode = $this->input->post('jobcode');
         $user = $this->input->post('user');
         $comments = $this->input->post('comments');
-    
-        // Save logic here — for example:
-        $data = [
-            'job_id' => $jid,
-            'job_code' => $jobcode,
-            'assigned_user_id' => $user,
-            'comments' => $comments,
-            'assigned_date' => date('Y-m-d H:i:s')
-        ];
+        $emp_status = $this->input->post('emp_status');
     
         $query = $this->db->query("SELECT * FROM joblist WHERE jobcode = '$jobcode'");
         $rs = $query->row();
-        $this->db->query("UPDATE joblist SET status = 1 WHERE jobcode = '$jobcode'");
-        $this->db->insert('assigned_jobs', $data); // Change table as needed
     
         $data = [
             'job_id'     => $jid,
             'jobcode'     => $jobcode,
             'client_id'   => 0,
-            'old_status'  => $rs->status,
-            'new_status'  => 1,
-            'changed_by'  => 'admin',
+            'old_status'  => $rs->emp_status,
+            'new_status'  => $emp_status,
+            'changed_by'  => 'employee',
             'changed_by_id'  => $user_id,
-            'remarks'     => 'Job approved by admin'
+            'remarks'     => $comments
         ];
     
-        $this->db->insert('job_status_log', $data);
+        $this->db->insert('emp_job_status_log', $data);
+
+        $this->db->query("UPDATE joblist SET emp_status = $emp_status WHERE jobcode = '$jobcode'");
+
         $noti_data=array();
-        $noti_data['client_id']=$rs->user_id;	
+        $noti_data['emp_id']=$user_id;
         $noti_data['jobcode']=$jobcode;
-        $noti_data['n_status']=1;	
+        $noti_data['n_status']=$rs->emp_status;
         $noti_data['message']="Job assigned successfully";
         $noti_data['is_read']=0;
-        add_notification($noti_data);
-    
+        $this->db->insert('admin_job_notifications', $noti_data);
+
         echo json_encode(['status' => true, 'message' => 'User assigned successfully']);
     }
 
@@ -224,7 +221,7 @@ class RecievedClientsJob extends CI_Controller {
         $sessionData = $this->session->userdata('accurexClientLoginDetails'); 
         $user_id = $sessionData->user_ID;
 
-        $data['page'] = 'Adminv/Listhis';
+        $data['page'] = 'Jobs/Listhis';
         // Job basic info
         $data['job'] = $this->Client_model->findJobByCode($jobcode);
         // Job Query List
@@ -244,20 +241,5 @@ class RecievedClientsJob extends CI_Controller {
         // $this->load->view('Client_portal/clientJobHistories', $data);
         $this->load->view('index', $data);
      }
-
-
-     
-    public function AdminEmpNotify(){
-        $usersQuery = $this->db->select('users.*, roles.name as role_name')
-                                ->from('users')
-                                ->join('roles', 'roles.id = users.role_ID')
-                                ->where('users.role_ID !=', 1)
-                                ->where('users.role_ID !=', 5)
-                                ->get();
-        $data['users']          = $usersQuery->result(); 
-        
-        $data['page']           = 'Adminv';
-        $this->load->view('index', $data);
-    }
     
 }
