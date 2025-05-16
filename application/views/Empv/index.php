@@ -71,6 +71,9 @@
                 opacity: 1;
                 color:#fff;
             }
+            #jobs th, #jobs td{
+                text-wrap-mode: nowrap;
+            }
             
     </style>
     
@@ -141,7 +144,7 @@
                         <div class="row form-group">
                             <div class="col-md-12 tab-pane fade1" id="tabs-live" role="tabpanel">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered">
+                                    <table class="table table-bordered" id="jobs">
                                         <thead>
                                             <tr>
                                                 <th>Job Code</th>
@@ -255,7 +258,7 @@
       <form id="assignJobForm">
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Assigned to Job To User</h4>
+          <h4 class="modal-title">Change Job Status</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -269,7 +272,7 @@
                   <input type="text" readonly class="form-control py-2" id="jjobcode" name="jobcode">
                   <br/>
                   
-                <label>Select Emp Status</label>
+                <label>Select Job Status</label>
                 <select class="form-control py-2" name="emp_status" required>
                   <option value="">Please Select...</option>
                   <option value="1">In Progress</option>
@@ -539,7 +542,7 @@ $(document).ready(function () {
                                         data-target="#QassignJobModel" 
                                         data-backdrop="static" 
                                         data-keyboard="false">
-                                        <i class="fa fa-user-plus"></i>    
+                                        <i class="fa fa-check-square"></i>    
                                     </button>
                                 </td>
                             </tr>`;

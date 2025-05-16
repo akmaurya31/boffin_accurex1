@@ -26,20 +26,28 @@
 
                         <li class="<?php echo ($page == 'Notification' || $page == 'Notification/Read' || $page == 'Notification/Create' || $page == 'Notification/List') ? 'active' : ''; ?> submenu">
 							<a href="<?php echo base_url('activities');?>">
-                                <i class="ccc fa fa-bell-o"></i>
-                                <span>Notifications</span>
+                                <i class="ccc fa fa-envelope"></i>
+                                <span>Messages</span>
                                 <span class="badge badge-pill bg-navy float-right">
                                     <?php echo $countNotification;?>
                                 </span>
                             </a>
 
 							<ul style="display: none;">
-								<li><a href="<?php echo base_url('activities');?>">Notifications List</a></li>
-								<li><a href="<?php echo base_url('AdminEmpNotify');?>">Employee Notification</a></li>
+								<li><a href="<?php echo base_url('activities');?>">Messages List</a></li>
 
-								<li><a href="<?php echo base_url('create-notification');?>">Create Notification</a></li>
-								<li><a href="<?php echo base_url('sent-notifications');?>">Sent Notifications</a></li>
+								<li><a href="<?php echo base_url('create-notification');?>">Create Messages</a></li>
+								<li><a href="<?php echo base_url('sent-notifications');?>">Sent Messages</a></li>
 							</ul>
+						</li>
+						<li class="<?php echo ($page == 'AdminEmpNotify') ? 'active' : ''; ?>">
+							<a href="<?php echo base_url('AdminEmpNotify');?>">
+                                <i class="ccc fa fa-bell-o"></i>
+                                <span>Notification</span>
+                                <span class="badge badge-pill bg-navy float-right">
+                                    <?php echo $countNotification;?>
+                                </span>
+                            </a>
 						</li>
                     <?php }?>
                     <?php if($this->user_lib->is_has_access('4')){?>
@@ -96,8 +104,14 @@
                             <li class="<?php echo ($page == 'Task' || $page == 'Task/List') ? 'active' : '';?>">
                                 <a href="<?php echo base_url('EmpClientsJob/live-job');?>">
                                     <i class="fa fa-globe"></i>
-                                    <span>Job Listccc</span>
+                                    <span>Job List</span>
                                 </a>
+                            </li>
+                            <li><a href="<?php echo base_url('activities');?>">
+                                <i class="fa fa-envelope"></i> <span>Messages List</span></a>
+                            </li>
+                            <li><a href="<?php echo base_url('activities');?>">
+                                <i class="fa fa-bell-o"></i> <span>Notification List</span></a>
                             </li>
                     <?php  } ?>
 

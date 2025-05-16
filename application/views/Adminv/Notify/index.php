@@ -110,19 +110,15 @@
                     
                         
                         <li class="nav-item">
-                            <a class="nav-link <?php echo $a;?>" href="<?php echo base_url('RecievedClientsJob/draft-job');?>" id="tabs-draft-tab" >Draft Job</a>
+                            <a class="nav-link <?php echo $a;?>" href="<?php echo base_url('Adminnotification/ClientsNotification');?>" id="tabs-client-notification">
+                                Client(s) Notification <span class="badge badge-pill text-dark bg-danger float-right"> 2</span>
+                            
+                            </a>
                         </li>
                         
                         <li class="nav-item ">
-                            <a class="nav-link <?php echo $d;?>"  href="<?php echo base_url('RecievedClientsJob/live-job');?>" id="tabs-live-tab"  >Live Job</a>
-                        </li>
-                      
-                        <li class="nav-item"> 
-                            <a class="nav-link <?php echo $b;?>" href="<?php echo base_url('RecievedClientsJob/hold-job');?>" id="tabs-hold-tab"  >On Hold Job</a>
-                        </li>
-                          
-                        <li class="nav-item">
-                            <a class="nav-link <?php echo $c;?>" href="<?php echo base_url('RecievedClientsJob/completed-job');?>" id="tabs-completed-tab"  >Completed Job</a>
+                            <a class="nav-link <?php echo $d;?>"  href="<?php echo base_url('Adminnotification/EmployeeNotification');?>" id="tabs-employee-notification">Employee (s) Notification <span class="badge badge-pill text-dark bg-danger float-right"> 1</span>
+                            </a>
                         </li>
                       
                     </ul>
@@ -142,22 +138,22 @@
                 </div>
                 
                 <div class="card-block">
-                    <?php if($uri2 == 'live-job'){?>
+                    <?php //if($uri2 == 'live-job'){?>
                          
                         <div class="row form-group">
-                            <div class="col-md-12 tab-pane fade1" id="tabs-live" role="tabpanel">
+                            <div class="col-md-12 tab-pane fade1" id="tabs-client-notification" role="tabpanel">
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="jobs">
                                         <thead>
                                             <tr>
+                                                <th>#</th>
+                                                <th>Client Name</th>
                                                 <th>Job Code</th>
                                                 <th>Job Name</th>
-                                                <th>Status</th>
-                                                <th>Emp Status</th>
-                                                <th>Received On</th>
-                                                <!-- <th>Job Comment</th> -->
-                                                <th>Assigned to</th>
-                                                <th>Action</th>
+                                                <th>Job Status</th>
+                                                <th>Job Comment</th>
+                                                <th>Attachments</th>
+                                                <th>Recieved On</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tabContent-live">
@@ -167,25 +163,24 @@
                                 </div>
                             </div>
                         </div>
-                    <?php }?>
+                    <?php //}?>
                     
-                    <?php if($uri2 == 'hold-job'){?>
+                    <?php //if($uri2 == 'hold-job'){?>
                        
                         
                         <div class="row form-group">
-                            <div class="col-md-12 tab-pane fade1" id="tabs-hold" role="tabpanel">
+                            <div class="col-md-12 tab-pane fade1" id="tabs-employee-notification" role="tabpanel">
                                 <div class="table-responsive">
                                     <table class="table table-bordered"  id="jobs">
                                         <thead>
                                             <tr>
+                                                <th>#</th>
+                                                <th>Employee Name</th>
                                                 <th>Job Code</th>
                                                 <th>Job Name</th>
-                                                <th>Status</th>
-                                                <th>Emp Status</th>
-                                                <th>Received On</th>
-                                                <!-- <th>Job Comment</th> -->
-                                                <th>Assigned to</th>
-                                                <th>Action</th>
+                                                <th>Job Status</th>
+                                                <th>Employee Comment</th>
+                                                <th>Recieved On</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tabContent-hold">
@@ -195,63 +190,8 @@
                                 </div>
                             </div>
                         </div>
-                    <?php }?>
+                    <?php// }?>
                     
-                    <?php if($uri2 == 'completed-job'){?>
-                      
-                        
-                        <div class="row form-group">
-                          <div class="col-md-12 tab-pane fade1" id="tabs-completed" role="tabpanel">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered"  id="jobs">
-                                        <thead>
-                                            <tr>
-                                                <th>Job Code</th>
-                                                <th>Job Name</th>
-                                                <th>Status</th>
-                                                <th>Emp Status</th>
-                                                <th>Received On</th>
-                                                <!-- <th>Job Comment</th> -->
-                                                <th>Assigned to</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tabContent-completed">
-                                        </tbody>
-                                    </table>
-                                     <nav><ul id="pagination-completed" class="pagination"></ul></nav>
-                                </div>
-                            </div>
-                        </div>
-                    <?php }?>
-                    
-                    <?php if($uri2 == 'draft-job'){?>
-                        
-                        
-                        <div class="row form-group">
-                             <div class="col-md-12 tab-pane fade1" id="tabs-draft" role="tabpanel">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered"  id="jobs">
-                                        <thead>
-                                            <tr>
-                                                <th>Job Code</th>
-                                                <th>Job Name</th>
-                                                <th>Status</th>
-                                                <th>Emp Status</th>
-                                                <th>Received On</th>
-                                                <!-- <th>Job Comment</th> -->
-                                                <th>Assigned to</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tabContent-draft">
-                                        </tbody>
-                                    </table>
-                                     <nav><ul id="pagination-draft" class="pagination"></ul></nav>
-                                </div>
-                            </div>
-                        </div>
-                    <?php }?>
                 </div>
             </div>
         </div>
@@ -259,227 +199,6 @@
 
 </div>
 </div>
-<div class="modal fade up" id="QassignJobModel">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form id="assignJobForm">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Assigned to Job To User</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label>Job Code</label>
-                  <input type="hidden" class="form-control" id="jjid" name="jid">
-                  <input type="text" readonly class="form-control py-2" id="jjobcode" name="jobcode">
-                  <br/>
-                  
-                <label>Select User</label>
-                <select class="form-control py-2" name="user" required>
-                  <option value="">Please Select...</option>
-                  <?php foreach ($userlist as $u) { ?>
-                    <option value="<?php echo $u->user_ID; ?>">
-                      <?php echo $u->full_name; ?>
-                    </option>
-                  <?php } ?>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>Comments</label>
-                <textarea name="comments" rows="5" class="form-control" required></textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- change status modal  -->
-<div class="modal fade up" id="ChangeJobStatusModel">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form id="assignJobForm">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Change Job Status</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label>Job Code</label>
-                  <input type="hidden" class="form-control" id="jjid" name="jid">
-                  <input type="text" readonly class="form-control py-2" id="jjobcode" name="jobcode">
-              </div>
-                <div class="form-group">
-                  <label>Status</label>
-                    <select class="form-control py-2" name="emp_status" required>
-                      <option value="">Please Select...</option>
-                      <option value="1">In Progress</option>
-                      <option value="2">On Hold</option>
-                      <option value="4">Completed</option>
-                    </select>
-                </div>
-
-              <div class="form-group">
-                <label>Comments</label>
-                <textarea name="comments" rows="5" class="form-control" required></textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-
-<div class="modal fade" id="jobDetailModal" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-
-      <div class="modal-header bg-info text-white">
-        <h5 class="modal-title" id="jobDetailLabel">Preview Job Detail</h5>
-        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-6">
-            <table class="table table-bordered">
-                <tr>
-                  <th>Type of assignment:</th>
-                  <td class="m_assignment">Tax return</td>
-                </tr>
-                <tr>
-                  <th>Name of client:</th>
-                  <td class="m_client"></td>
-                </tr>
-                <tr>
-                  <th>Contact Name:</th>
-                  <td class="m_person"></td>
-                </tr>
-                <tr>
-                  <th>Email:</th>
-                  <td class="m_email"></td>
-                </tr>
-
-                <tr class="div_qtr_year_end">
-                  <th>Quarter/Period:</th>
-                  <td class="m_qtr_year_end"></td>
-                </tr>
-
-                <tr class="otherTaxyear fldother">
-                  <th id="tyear">Tax Year:</th>
-                  <td class="m_taxyear"></td>
-                </tr>
-
-                <tr>
-                  <th>Budgeted hours:</th>
-                  <td class="m_budget"></td>
-                </tr>
-                <tr>
-                  <th>Accountancy Fees (Net):</th>
-                  <td class="m_fee"></td>
-                </tr>
-                <tr class="otherAccountancy fldother">
-                  <th>Additional Comments:</th>
-                  <td class="m_comments"></td>
-                </tr>
-            </table>
-
-			<table class="table table-bordered">
-				<thead>
-					<tr>
-					<th>File Name</th>
-					<th>Type</th>
-					<th>Size</th>
-					</tr>
-				</thead>
-				<tbody class="attachmentView">
-					<tr>
-						<td>My File Name 1</td>
-						<td>PDF</td>
-						<td>1.2 MB</td>
-					</tr>
-					<tr>
-						<td>My File Name 2</td>
-						<td>DOCX</td>
-						<td>900 KB</td>
-					</tr>
-					<tr>
-						<td>My File Name 3</td>
-						<td>PNG</td>
-						<td>2.5 MB</td>
-					</tr>
-				</tbody>
-				</table>
-
-          </div>
-          <div class="col-md-6">
-            <table class="table table-bordered">
-				<tbody class="iAddComm L714">
-					<tr class="">
-						<th>Additional Comments:</th>
-					</tr>
-                    <tr>
-                        <td class="om_comments"></td>
-                    </tr>
-				</tbody>
-			</table>
-            <table class="table table-bordered">
-              <tbody class="previewEmployement L399">
-			    <tr>
-                    <td width="50">1</td>
-                    <td>Employment</td>
-                    <td>Yes</td>
-                    <td width="200"></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Pension Income</td>
-                    <td>No</td>
-                    <td></td>
-                </tr>
-			  </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-sm dismiss" data-dismiss="modal">Close</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-
 
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  

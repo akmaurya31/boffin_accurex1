@@ -30,18 +30,8 @@
                     $activeNoti = '';
                 }
             ?>
-
-            <li class="nav-item dropdown d-none d-sm-block <?php echo $activeNoti;?>">  
-                 <a href="<?php echo base_url('AdminEmpNotify');?>" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                    <i class=" fa fa-bell-o"></i> 
-                    <span class="badge badge-pill bg-danger float-right"><?php echo $countNotification;?></span>
-                </a>
-            </li>
-
-
-
             <li class="nav-item dropdown d-none d-sm-block <?php echo $activeNoti;?>">
-                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"><i class="vvv fa fa-bell-o"></i> <span
+                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"><i class="fa fa-bell-o"></i> <span
                         class="badge badge-pill bg-danger float-right"><?php echo $countNotification;?></span></a>
                 <div class="dropdown-menu notifications">
                     <div class="topnav-dropdown-header">
@@ -78,7 +68,49 @@
                         </ul>
                     </div>
                     <div class="topnav-dropdown-footer">
-                        <a href="<?php echo base_url('Activities');?>">View all Notifications</a>
+                        <a href="<?php echo base_url('AdminEmpNotify');?>">View all Notifications</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item dropdown d-none d-sm-block <?php echo $activeNoti;?>">
+                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"><i class="fa fa-envelope"></i> <span
+                        class="badge badge-pill bg-danger float-right"><?php echo $countNotification;?></span></a>
+                <div class="dropdown-menu notifications">
+                    <div class="topnav-dropdown-header">
+                        <span>Internal Team Message</span>
+                    </div>
+                    <div class="drop-scroll">
+                        <ul class="notification-list">
+                            <?php
+
+                                if(!empty($list)){
+                                    foreach($list as $key => $value){?>
+                                         <li class="notification-message">
+                                            <a href="<?php echo base_url('read-notification/'.$value->notification_ID);?>">
+                                                <div class="media">
+                                                    <span class="avatar">
+                                                        <img alt="<?php echo $value->full_name;?>" src="<?php echo base_url('upload/'.$value->image);?>" class="img-fluid">
+                                                    </span>
+                                                    <div class="media-body">
+                                                        <p class="noti-details"><span class="noti-title"><?php echo $value->full_name;?></span> added new
+                                                            task <span class="noti-title"><?php echo $value->title;?></span></p>
+                                                        <p class="noti-time"><span class="notification-time">
+                                                            <?php echo $this->user_lib->timeAgo($value->created_on);?>
+                                                        </span></p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <?php if($value->noti_status != "seen"){?>
+                                                <span class="status online"></span>
+                                            <?php } ?>
+                                        </li>
+                                <?php
+                                    }
+                                }?>
+                        </ul>
+                    </div>
+                    <div class="topnav-dropdown-footer">
+                        <a href="<?php echo base_url('Activities');?>">View all Messages</a>
                     </div>
                 </div>
             </li>
