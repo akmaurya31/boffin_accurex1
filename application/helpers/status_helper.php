@@ -327,6 +327,17 @@ if (!function_exists('send_custom_email')) {
         $message = $CI->load->view($view, $data, true);
         return $CI->sentMailToClient($to_email, $subject, $message);
     }
+
+
+    if (!function_exists('get_assigned_employee')) {
+    function get_assigned_employee($user_ID) {
+        $CI =& get_instance();
+        $CI->load->database();
+        $sql = "SELECT * from users WHERE user_ID = ?";
+        $query = $CI->db->query($sql, array($user_ID));
+        return $query->row(); // returns array of objects
+    }
+}
 }
 
 

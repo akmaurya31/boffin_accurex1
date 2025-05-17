@@ -179,16 +179,15 @@ class EmpClientsJob extends CI_Controller {
 
   public function assignuseronjob() {
         $user_id = $this->session->userdata('user_ID'); 
-        //var_dump($user_id); die();
+
         $jid = $this->input->post('jid');
         $jobcode = $this->input->post('jobcode');
-        $user = $this->input->post('user');
-        $comments = $this->input->post('comments');
         $emp_status = $this->input->post('emp_status');
-    
+        $comments = $this->input->post('comments');
+
         $query = $this->db->query("SELECT * FROM joblist WHERE jobcode = '$jobcode'");
         $rs = $query->row();
-    
+        $this->db->query("UPDATE joblist SET emp_status = $emp_status WHERE jobcode = '$jobcode'");
         $data = [
             'job_id'     => $jid,
             'jobcode'     => $jobcode,
@@ -199,19 +198,17 @@ class EmpClientsJob extends CI_Controller {
             'changed_by_id'  => $user_id,
             'remarks'     => $comments
         ];
-    
         $this->db->insert('emp_job_status_log', $data);
 
-        $this->db->query("UPDATE joblist SET emp_status = $emp_status WHERE jobcode = '$jobcode'");
-
-        $noti_data=array();
-        $noti_data['emp_id']=$user_id;
-        $noti_data['jobcode']=$jobcode;
-        $noti_data['n_status']=$rs->emp_status;
-        $noti_data['message']="Job assigned successfully";
-        $noti_data['is_read']=0;
-        $this->db->insert('admin_job_notifications', $noti_data);
-
+        if($emp_status!=$rs->emp_status){
+            $noti_data=array();
+            $noti_data['emp_id']=$user_id;
+            $noti_data['jobcode']=$jobcode;
+            $noti_data['n_status']=$emp_status;
+            $noti_data['message']="$jobcode change status by $user_id ,$rs->emp_status to $emp_status";
+            $noti_data['is_read']=0;
+            $this->db->insert('admin_job_notifications', $noti_data);
+        }
         echo json_encode(['status' => true, 'message' => 'User assigned successfully']);
     }
 

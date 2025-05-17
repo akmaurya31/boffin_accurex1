@@ -280,7 +280,7 @@
                   <br/>
                   
                 <label>Select User</label>
-                <select class="form-control py-2" name="user" required>
+                <select class="form-control py-2" name="user" id="user" required>
                   <option value="">Please Select...</option>
                   <?php foreach ($userlist as $u) { ?>
                     <option value="<?php echo $u->user_ID; ?>">
@@ -312,7 +312,7 @@
 <div class="modal fade up" id="ChangeJobStatusModel">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="assignJobForm">
+      <form id="ChangeJobStatusFrom">
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Change Job Status</h4>
@@ -325,15 +325,17 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label>Job Code</label>
-                  <input type="hidden" class="form-control" id="jjid" name="jid">
-                  <input type="text" readonly class="form-control py-2" id="jjobcode" name="jobcode">
+                  <input type="hidden" class="form-control" id="cjjid" name="cjid">
+                  <input type="text" readonly class="form-control py-2" id="cjjobcode" name="cjobcode">
               </div>
                 <div class="form-group">
-                  <label>Status</label>
-                    <select class="form-control py-2" name="emp_status" required>
+                  <label>Client Job Status</label>
+                    <select class="form-control py-2" name="cstatus"  id="cstatus" required>
                       <option value="">Please Select...</option>
                       <option value="1">In Progress</option>
                       <option value="2">On Hold</option>
+                      <option value="3">Draft</option>
+                      <option value="5">Under Review</option>
                       <option value="4">Completed</option>
                     </select>
                 </div>
@@ -488,10 +490,17 @@
 $(document).ready(function () {
     // 1. Set jobcode and jid when modal is triggered
     $(document).on('click', '[data-toggle="modal"][data-target="#QassignJobModel"]', function () {
-        var jobcode = $(this).data('jjobcode');
-        var jid = $(this).data('jjid');
-        $('#jjobcode').val(jobcode);
-        $('#jjid').val(jid);
+        console.log('493')
+        $('#jjobcode').val($(this).data('jjobcode'));
+        $('#jjid').val($(this).data('jjid'));
+        $('#user').val($(this).data('jjemp_id'));
+    });
+
+    $(document).on('click', '[data-toggle="modal"][data-target="#ChangeJobStatusModel"]', function () {
+        console.log('500',$(this).data('jjobcode'))
+        $('#cjjobcode').val($(this).data('jjobcode'));
+        $('#cjjid').val($(this).data('jjid'));
+        $('#cstatus').val($(this).data('jjstatus'));
     });
 
     // 2. Handle form submission
@@ -524,15 +533,48 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#ChangeJobStatusFrom').on('submit', function (e) {
+        e.preventDefault(); 
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('RecievedClientsJob/ChangeJobStatusAct'); ?>",  
+            data: $(this).serialize(),
+            dataType: "json",
+            success: function (response) {
+                if (response.status === true) {
+                    $('#QassignJobModel').modal('hide');
+                    $('#assignJobForm')[0].reset();
+                    toastr.success(response.message);
+                     setTimeout(function() {
+                        location.reload();
+                    }, 500); 
+                } else {
+                      toastr.error(response.message);
+                }
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText);
+            }
+        });
+    });
+
 });
 
-$(document).on('click', '[data-toggle="modal"][data-target="#QassignJobModel"]', function () {
-    var jjobcode = $(this).data('jjobcode');
-    var jjid = $(this).data('jjid');
+// $(document).on('click', '[data-toggle="modal"][data-target="#ChangeJobStatusModel"]', function () {
+//     var jjobcode = $(this).data('jjobcode');
+//     var jjid = $(this).data('jjid');
+//     $('#jjid').val(jjid);
+//     $('#jjobcode').val(jjobcode);
+// });
 
-    $('#jjid').val(jjid);
-    $('#jjobcode').val(jjobcode);
-});
+// $(document).on('click', '[data-toggle="modal"][data-target="#QassignJobModel"]', function () {
+//     var jjobcode = $(this).data('jjobcode');
+//     var jjid = $(this).data('jjid');
+
+//     $('#jjid').val(jjid);
+//     $('#jjobcode').val(jjobcode);
+// });
 
 function formatDate(dateStr) {
     const date = new Date(dateStr);
@@ -576,9 +618,12 @@ $(document).ready(function () {
                         rows += `
                             <tr>
                                 <td>${job.jobcode}</td>
-                                <td>${job.job_name}</td>
-                                <td><span class='badge ${job.badge_color} '>${job.status_name}</span></td>
-                                <td>${job.sub_status}</td>
+                                <td>${job.job_name}
+                                <br/>
+                                <a href="#" data-toggle="tooltip" data-placement="bottom" title="${job.additional_comment}">Additional Comment</a>
+                                </td>
+                                <td><span class='badge ${job.badge_color} '>${job.status_name}</span><br/>${job.sub_status}</td>
+                                <td>${job.emp_status_name}</td>
                                 <td>${jobDate}</td>
                                 <td>${job.employee ?? ''}</td>
                                 <td class="actions">
@@ -596,6 +641,7 @@ $(document).ready(function () {
                                         data-toggle="modal"
                                         data-jjobcode="${job.jobcode}"
                                         data-jjid="${job.id}"
+                                        data-jjemp_id="${job.emp_id}"
                                         data-target="#QassignJobModel" 
                                         data-backdrop="static" 
                                         data-keyboard="false">
@@ -606,6 +652,7 @@ $(document).ready(function () {
                                         data-toggle="modal"
                                         data-jjobcode = "${job.jobcode}"
                                         data-jjid="${job.id}"
+                                        data-jjstatus="${job.status}"
                                         data-target="#ChangeJobStatusModel"
                                         data-backdrop="static"
                                         data-keyboard="false">
@@ -885,4 +932,8 @@ function CshowPreviewModal(rs) {
         const mb = (kb / 1024)/100;
         return mb.toFixed(2) + ' MB';
     }
+
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
 </script>

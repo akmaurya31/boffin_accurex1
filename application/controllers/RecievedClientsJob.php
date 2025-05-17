@@ -157,10 +157,12 @@ class RecievedClientsJob extends CI_Controller {
         foreach ($jobs as &$job) {
             $job['job_name'] = generate_job_title_from_code($job['jobcode']);
             $status_details = get_job_status_details($job['status']);
+            $emp_status_details = get_job_status_details($job['emp_status']);
             $job['status_name'] = $status_details['status']; // Store the status
+            $job['emp_status_name'] = $emp_status_details['status']; // Store the status
             $job['sub_status'] = $status_details['sub_status']; // Store the sub-status
             $job['badge_color'] = $status_details['badge_color']; // Store the badge color   
-            $job['employee'] = get_assigned_job_by_jobid($job['id'])->full_name; // Store the badge color   
+            $job['employee'] = get_assigned_employee($job['emp_id'])->full_name; // Store the badge color   
         }
         
         echo json_encode([
@@ -173,28 +175,23 @@ class RecievedClientsJob extends CI_Controller {
 
   public function assignuseronjob() {
         $user_id = $this->session->userdata('user_ID'); 
-        
-    
-        //var_dump($user_id); die();
         $jid = $this->input->post('jid');
         $jobcode = $this->input->post('jobcode');
-        $user = $this->input->post('user');
+        $emp_id = $this->input->post('user');
         $comments = $this->input->post('comments');
-    
-        // Save logic here — for example:
         $data = [
             'job_id' => $jid,
             'job_code' => $jobcode,
-            'assigned_user_id' => $user,
+            'assigned_user_id' => $emp_id,
             'comments' => $comments,
             'assigned_date' => date('Y-m-d H:i:s')
         ];
     
         $query = $this->db->query("SELECT * FROM joblist WHERE jobcode = '$jobcode'");
         $rs = $query->row();
-        $this->db->query("UPDATE joblist SET status = 1 WHERE jobcode = '$jobcode'");
+        $this->db->query("UPDATE joblist SET status = 1,emp_id='$emp_id' WHERE jobcode = '$jobcode'");
         $this->db->insert('assigned_jobs', $data); // Change table as needed
-    
+        
         $data = [
             'job_id'     => $jid,
             'jobcode'     => $jobcode,
@@ -205,16 +202,37 @@ class RecievedClientsJob extends CI_Controller {
             'changed_by_id'  => $user_id,
             'remarks'     => 'Job approved by admin'
         ];
-    
         $this->db->insert('job_status_log', $data);
-        $noti_data=array();
-        $noti_data['client_id']=$rs->user_id;	
-        $noti_data['jobcode']=$jobcode;
-        $noti_data['n_status']=1;	
-        $noti_data['message']="Job assigned successfully";
-        $noti_data['is_read']=0;
-        add_notification($noti_data);
-    
+        
+        //Client Notify hoga jab draft se inprogess hua ho >> ya first time userAssign hua ho
+        if($rs->status==3 || $rs->status==0){
+            $noti_data=array();
+            $noti_data['client_id']=$rs->user_id;	
+            $noti_data['jobcode']=$jobcode;
+            $noti_data['message']="Job assigned successfully";
+            $noti_data['is_read']=0;
+            $noti_data['n_status']=1;	
+            add_notification($noti_data);
+        }
+
+        //empNotify
+        // Case1: Old Employee
+            $oe_noti_data=array();
+            $oe_noti_data['emp_id']=$rs->emp_id;	
+            $oe_noti_data['jobcode']=$jobcode;
+            $oe_noti_data['message']="$jobcode Remove from your access assign to $emp_id";
+            $oe_noti_data['is_read']=0;
+            $oe_noti_data['n_status']=1;	
+            $this->db->insert('emp_job_notifications', $oe_noti_data); // Change table as needed  
+        // Case2: New Employee
+            $ne_noti_data=array();
+            $ne_noti_data['emp_id']=$emp_id;	
+            $ne_noti_data['jobcode']=$jobcode;
+            $ne_noti_data['message']="$jobcode Assign to you access pervious access on $rs->emp_id";
+            $ne_noti_data['is_read']=0;
+            $ne_noti_data['n_status']=1;	
+            $this->db->insert('emp_job_notifications', $ne_noti_data);
+
         echo json_encode(['status' => true, 'message' => 'User assigned successfully']);
     }
 
@@ -246,18 +264,37 @@ class RecievedClientsJob extends CI_Controller {
      }
 
 
-     
-    public function AdminEmpNotify(){
-        $usersQuery = $this->db->select('users.*, roles.name as role_name')
-                                ->from('users')
-                                ->join('roles', 'roles.id = users.role_ID')
-                                ->where('users.role_ID !=', 1)
-                                ->where('users.role_ID !=', 5)
-                                ->get();
-        $data['users']          = $usersQuery->result(); 
+
+    public function ChangeJobStatusAct() {
+        $user_id = $this->session->userdata('user_ID'); 
+        $jid = $this->input->post('cjid');
+        $jobcode = $this->input->post('cjobcode');
+        $status = $this->input->post('cstatus');
+        $comments = $this->input->post('comments');
+        $query = $this->db->query("SELECT * FROM joblist WHERE jobcode = '$jobcode'");
+        $rs = $query->row();
+        $this->db->query("UPDATE joblist SET status = '$status' WHERE jobcode = '$jobcode'");
+        $data = [
+            'job_id'     => $jid,
+            'jobcode'     => $jobcode,
+            'client_id'   => 0,
+            'old_status'  => $rs->status,
+            'new_status'  => $status,
+            'changed_by'  => 'admin',
+            'changed_by_id'  => $user_id,
+            'remarks'     => 'Job approved by admin'
+        ];
+        $this->db->insert('job_status_log', $data);
         
-        $data['page']           = 'Adminv';
-        $this->load->view('index', $data);
+        //Client Notification
+        $noti_data=array();
+        $noti_data['client_id']=$rs->user_id;	
+        $noti_data['jobcode']=$jobcode;
+        $noti_data['message']="$jobcode status has been changed  $rs->status to $status successfully";
+        $noti_data['is_read']=0;
+        $noti_data['n_status']=$status;	
+        add_notification($noti_data);
+        echo json_encode(['status' => true, 'message' => 'Client Job Status Changed successfully']);
     }
     
 }

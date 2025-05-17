@@ -41,7 +41,7 @@
 							</ul>
 						</li>
 						<li class="<?php echo ($page == 'AdminEmpNotify') ? 'active' : ''; ?>">
-							<a href="<?php echo base_url('AdminEmpNotify');?>">
+							<a href="<?php echo base_url('AdminEmpNotify/Client');?>">
                                 <i class="ccc fa fa-bell-o"></i>
                                 <span>Notification</span>
                                 <span class="badge badge-pill bg-navy float-right">

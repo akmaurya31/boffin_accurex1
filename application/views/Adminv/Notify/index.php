@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-sm-4 col-3">
-                <h4 class="page-title">Recived Client Job Lists</h4>
+                <h4 class="page-title">Notify Job Lists</h4>
             </div>
         </div>
         
@@ -81,17 +81,11 @@
     <?php 
         $a = $b = $c = $d = '';
         switch ($uri2) {
-          case "draft-job":
+          case "Client":
             $a = "active";
             break;
-          case "hold-job":
+          case "Employee":
             $b = 'active';
-            break;
-          case "completed-job":
-            $c = 'active';
-            break;
-          case "live-job":
-            $d = 'active';
             break;
           default:
             $a = "active";
@@ -110,14 +104,14 @@
                     
                         
                         <li class="nav-item">
-                            <a class="nav-link <?php echo $a;?>" href="<?php echo base_url('Adminnotification/ClientsNotification');?>" id="tabs-client-notification">
+                            <a class="nav-link <?php echo $a;?>" href="<?php echo base_url('AdminEmpNotify/Client');?>" id="tabs-client-notification">
                                 Client(s) Notification <span class="badge badge-pill text-dark bg-danger float-right"> 2</span>
                             
                             </a>
                         </li>
                         
                         <li class="nav-item ">
-                            <a class="nav-link <?php echo $d;?>"  href="<?php echo base_url('Adminnotification/EmployeeNotification');?>" id="tabs-employee-notification">Employee (s) Notification <span class="badge badge-pill text-dark bg-danger float-right"> 1</span>
+                            <a class="nav-link <?php echo $b;?>"  href="<?php echo base_url('AdminEmpNotify/Employee');?>" id="tabs-employee-notification">Employee (s) Notification <span class="badge badge-pill text-dark bg-danger float-right"> 1</span>
                             </a>
                         </li>
                       
@@ -138,7 +132,7 @@
                 </div>
                 
                 <div class="card-block">
-                    <?php //if($uri2 == 'live-job'){?>
+                    <?php if($uri2 == 'Client'){?>
                          
                         <div class="row form-group">
                             <div class="col-md-12 tab-pane fade1" id="tabs-client-notification" role="tabpanel">
@@ -163,9 +157,9 @@
                                 </div>
                             </div>
                         </div>
-                    <?php //}?>
+                    <?php }?>
                     
-                    <?php //if($uri2 == 'hold-job'){?>
+                    <?php if($uri2 == 'Employee'){?>
                        
                         
                         <div class="row form-group">
@@ -190,7 +184,7 @@
                                 </div>
                             </div>
                         </div>
-                    <?php// }?>
+                    <?php }?>
                     
                 </div>
             </div>
@@ -219,7 +213,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('RecievedClientsJob/assignuseronjob'); ?>", // Replace 'YourController' with actual controller
+            url: "<?php echo base_url('AdminEmpNotify/assignuseronjob'); ?>", // Replace 'YourController' with actual controller
             data: $(this).serialize(),
             dataType: "json",
             success: function (response) {
@@ -276,7 +270,7 @@ $(document).ready(function () {
         });
 
         $.ajax({
-            url: "<?= base_url('RecievedClientsJob/fetch_paginated_jobs') ?>",
+            url: "<?= base_url('AdminEmpNotify/fetch_paginated_jobs') ?>",
             method: "GET",
             data: {
                 status: tabType,

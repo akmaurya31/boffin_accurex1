@@ -273,7 +273,7 @@
                   <br/>
                   
                 <label>Select Job Status</label>
-                <select class="form-control py-2" name="emp_status" required>
+                <select class="form-control py-2" name="emp_status"  id="emp_status" required>
                   <option value="">Please Select...</option>
                   <option value="1">In Progress</option>
                   <option value="2">On Hold</option>
@@ -435,6 +435,7 @@ $(document).ready(function () {
         var jid = $(this).data('jjid');
         $('#jjobcode').val(jobcode);
         $('#jjid').val(jid);
+        $('#emp_status').val($(this).data('jjemp_status'));
     });
 
     // 2. Handle form submission
@@ -539,6 +540,7 @@ $(document).ready(function () {
                                         data-toggle="modal"
                                         data-jjobcode="${job.jobcode}"
                                         data-jjid="${job.id}"
+                                        data-jjemp_status="${job.emp_status}"
                                         data-target="#QassignJobModel" 
                                         data-backdrop="static" 
                                         data-keyboard="false">

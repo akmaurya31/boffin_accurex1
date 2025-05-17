@@ -11,6 +11,8 @@ class Adminnotification extends CI_Controller
     public function index(){
         $data['section']        = 'on_hold';
         $data['page']           = 'Adminv/Notify';
+        $data['uri2']=$this->uri->segment(2);
+        //print_r($data['uri2']); die("ASdf");
         $this->load->view('index',$data);
     }
     

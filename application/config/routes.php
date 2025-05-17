@@ -99,7 +99,6 @@ $route['RecievedClientsJob/completed-job']                 = "RecievedClientsJob
 $route['RecievedClientsJob/draft-job']                     = "RecievedClientsJob/index";
 $route['RecievedClientsJob/view-history']                  = "RecievedClientsJob/index";
 
-$route['AdminEmpNotify']                                   = "RecievedClientsJob/AdminEmpNotify";
 $route['ClientsNotification']                              = 'Adminnotification/ClientsNotification';
 $route['EmployeeNotification']                             = 'Adminnotification/EmployeeNotification';
 
@@ -157,6 +156,8 @@ $route['RecievedClientsJobHistories/(:any)'] = 'RecievedClientsJob/clientJobHist
 
 $route['RecievedClientsJob']        = 'RecievedClientsJob/index';
 
+$route['AdminEmpNotify/Client']     = 'Adminnotification/index';
+$route['AdminEmpNotify/Employee']   = 'Adminnotification/index';
 $route['AdminEmpNotify']            = 'Adminnotification/index';
 
 
