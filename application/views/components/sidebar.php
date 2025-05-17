@@ -44,9 +44,7 @@
 							<a href="<?php echo base_url('AdminEmpNotify/Client');?>">
                                 <i class="ccc fa fa-bell-o"></i>
                                 <span>Notification</span>
-                                <span class="badge badge-pill bg-navy float-right">
-                                    <?php echo $countNotification;?>
-                                </span>
+                                <span class="countNotificationSidebar badge badge-pill bg-navy float-right"><?php echo $nott->countNotification;?></span>
                             </a>
 						</li>
                     <?php }?>
@@ -110,11 +108,11 @@
                             <li><a href="<?php echo base_url('activities');?>">
                                 <i class="fa fa-envelope"></i> <span>Messages List</span></a>
                             </li>
-                            <li><a href="<?php echo base_url('activities');?>">
-                                <i class="fa fa-bell-o"></i> <span>Notification List</span></a>
+                            <li><a href="<?php echo base_url('EmpNotify/Client');?>">
+                                <i class="fa fa-bell-o"></i> <span>Notification List</span> 
+                                <span class="countNotificationSidebar badge badge-pill bg-navy float-right"><?php echo $nott->countNotification;?></span></a>
                             </li>
                     <?php  } ?>
-
 
                 <!-- <li>
                     <a href="doctors.html"><i class="fa fa-user-md"></i> <span>Doctors</span></a>

@@ -104,14 +104,14 @@
                     
                         
                         <li class="nav-item">
-                            <a class="nav-link <?php echo $a;?>" href="<?php echo base_url('AdminEmpNotify/Client');?>" id="tabs-client-notification">
+                            <a class="nav-link <?php echo $a;?>" href="<?php echo base_url('EmpNotify/Client');?>" id="tabs-client-notification">
                                 Client(s) Notification <span class="total_unread_cln badge badge-pill text-dark bg-danger float-right"> <?php echo $rs->total_unread_cln; ?></span>
                             
                             </a>
                         </li>
                         
                         <li class="nav-item ">
-                            <a class="nav-link <?php echo $b;?>"  href="<?php echo base_url('AdminEmpNotify/Employee');?>" id="tabs-employee-notification">Employee (s) Notification <span class="total_unread_emp badge badge-pill text-dark bg-danger float-right"> <?php echo $rs->total_unread_emp; ?></span>
+                            <a class="nav-link <?php echo $b;?>"  href="<?php echo base_url('EmpNotify/Employee');?>" id="tabs-employee-notification">Employee (s) Notification <span class="total_unread_emp badge badge-pill text-dark bg-danger float-right"> <?php echo $rs->total_unread_emp; ?></span>
                             </a>
                         </li>
                       
@@ -212,7 +212,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('AdminEmpNotify/assignuseronjob'); ?>", // Replace 'YourController' with actual controller
+            url: "<?php echo base_url('EmpNotify/assignuseronjob'); ?>", // Replace 'YourController' with actual controller
             data: $(this).serialize(),
             dataType: "json",
             success: function (response) {
@@ -269,7 +269,7 @@ $(document).ready(function () {
         });
 
         $.ajax({
-            url: "<?= base_url('AdminEmpNotify/fetch_paginated_jobs') ?>",
+            url: "<?= base_url('EmpNotify/fetch_paginated_jobs') ?>",
             method: "GET",
             data: {
                 tabType: tabType,
@@ -297,7 +297,7 @@ $(document).ready(function () {
                         }
                         if(tabType=='Client'){
                         rows += `
-                             <tr class="admin_${job.notifi_isread}"  data-id="${job.id}" data-tabType="Client"> 
+                            <tr class="emp_${job.notifi_isread}"  data-id="${job.id}" data-tabtype="Client"> 
                                 <td>${i}</td>
                                 <td>${job.clientName}</td>
                                 <td>${job.jobcode} </td>
@@ -308,7 +308,7 @@ $(document).ready(function () {
                             </tr>`;
                         }else if(tabType=='Employee'){
                              rows += `
-                            <tr class="admin_${job.notifi_isread}"  data-id="${job.id}" data-tabType="Employee"> 
+                             <tr class="emp_${job.notifi_isread}"  data-id="${job.id}" data-tabtype="Employee"> 
                                 <td>${i}</td>
                                 <td>${job.employee}</td>
                                 <td>${job.jobcode} </td>

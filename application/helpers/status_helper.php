@@ -399,6 +399,50 @@ if (!function_exists('send_custom_email')) {
         }
     }
 
+    if (!function_exists('EmpNotify')) {
+      function EmpNotify($limit = 20, $offset = 1)
+        {
+            
+            $CI =& get_instance(); // Get CI instance
+            $CI->load->database(); // Load DB if not loaded
+            $sessionData = (object)$CI->session->userdata(); 
+            if($sessionData->role_ID==4)  {
+                 $CI->db->where('show_emp_id', $sessionData->user_ID);         
+            } 
+            // Fetch notifications with limit and offset
+            $CI->db->select('*');
+            $CI->db->from('emp_job_notifications');
+            $CI->db->where('show_emp_id', $sessionData->user_ID);   
+            $CI->db->order_by('emp_job_notifications.created_at', 'DESC');
+            $CI->db->limit($limit, $offset);
+            $query = $CI->db->get();
+            $notifications = $query->result();  
+
+            // Count unread notifications
+            $CI->db->where('is_read', 0);
+            $CI->db->where('client_id >', 0);
+            $CI->db->where('show_emp_id', $sessionData->user_ID);     
+            $unread_count_query = $CI->db->get('emp_job_notifications');
+            $total_unread_cln = $unread_count_query->num_rows();
+
+             // Count unread notifications
+            $CI->db->where('is_read', 0);
+            $CI->db->where('emp_id >', 0);
+            $CI->db->where('emp_id', $sessionData->user_ID);     
+            $unread_count_query = $CI->db->get('emp_job_notifications');
+            $total_unread_emp = $unread_count_query->num_rows();
+
+            // Get total count of notifications
+            $total_all = $CI->db->count_all('emp_job_notifications');
+
+            return (object)[
+                'notifications' => $notifications,
+                'total_unread_cln' => $total_unread_cln,
+                'total_unread_emp' => $total_unread_emp,
+            ];
+        }
+    }
+
 
     if (!function_exists('get_job_query')) {
         function get_job_query($jqid)

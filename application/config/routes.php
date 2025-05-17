@@ -160,3 +160,7 @@ $route['AdminEmpNotify/Client']     = 'AdminEmpNotify/index';
 $route['AdminEmpNotify/Employee']   = 'AdminEmpNotify/index';
 $route['AdminEmpNotify']            = 'AdminEmpNotify/index';
 
+$route['EmpNotify/Client']     = 'EmpNotify/index';
+$route['EmpNotify/Employee']   = 'EmpNotify/index';
+$route['EmpNotify']            = 'EmpNotify/index';
+

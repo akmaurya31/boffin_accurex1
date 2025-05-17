@@ -29,13 +29,13 @@
                 }else{
                     $activeNoti = '';
                 }
-            ?>
+            ?> 
             <li class="nav-item dropdown d-none d-sm-block <?php echo $activeNoti;?>">
                 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"><i class="fa fa-bell-o"></i> <span
-                        class="badge badge-pill bg-danger float-right"><?php echo $countNotification;?></span></a>
+                        class="countNotification badge badge-pill bg-danger float-right"><?php echo $nott->countNotification;?></span></a>
                 <div class="dropdown-menu notifications">
                     <div class="topnav-dropdown-header">
-                        <span>Notifications</span>
+                        <span>Notifications </span>
                     </div>
                     <div class="drop-scroll">
                         <ul class="notification-list">

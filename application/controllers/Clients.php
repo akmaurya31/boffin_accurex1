@@ -701,13 +701,21 @@
         $noti_data['is_read']=0;
         $this->db->insert('admin_job_notifications', $noti_data);
 
-        $user_id = $sessionData->user_ID;
-        $noti_data=array();
-        $noti_data['client_id']=$user_id;
-        $noti_data['jobcode']=$job_code;
-        $noti_data['message']="Send Some documents file and commnets";
-        $noti_data['is_read']=0;
-        $this->db->insert('emp_job_notifications', $noti_data);
+
+        $query = $this->db->query("SELECT * FROM joblist WHERE jobcode = '$job_code'");
+        $rs = $query->row();
+
+        if($rs && $rs->emp_id){
+            $user_id = $sessionData->user_ID;
+            $noti_data=array();
+            $noti_data['client_id']=$user_id;
+            $noti_data['jobcode']=$job_code;
+            $noti_data['job_query_id']=$last_id;
+            $noti_data['show_emp_id']=$rs->emp_id;
+            $noti_data['message']="Send Some documents file and commnets";
+            $noti_data['is_read']=0;
+            $this->db->insert('emp_job_notifications', $noti_data);
+        }
 
         // Load the view
         $this->load->view('Client_portal/ClientsJobsList', $data);
