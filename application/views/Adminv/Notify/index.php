@@ -135,7 +135,7 @@
                     <?php if($uri2 == 'Client'){?>
                          
                         <div class="row form-group">
-                            <div class="col-md-12 tab-pane fade1" id="tabs-client-notification" role="tabpanel">
+                            <div class="col-md-12 tab-pane fade1" id="tabs-Client-notification" role="tabpanel">
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="jobs">
                                         <thead>
@@ -144,16 +144,16 @@
                                                 <th>Client Name</th>
                                                 <th>Job Code</th>
                                                 <th>Job Name</th>
-                                                <th>Job Status</th>
+                                                <th>Emp Job Status</th>
                                                 <th>Job Comment</th>
                                                 <th>Attachments</th>
                                                 <th>Recieved On</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="tabContent-live">
+                                        <tbody id="tabContent-Client">
                                         </tbody>
                                     </table>
-                                    <nav><ul id="pagination-live" class="pagination"></ul></nav>
+                                    <nav><ul id="pagination-Client" class="pagination"></ul></nav>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +163,7 @@
                        
                         
                         <div class="row form-group">
-                            <div class="col-md-12 tab-pane fade1" id="tabs-employee-notification" role="tabpanel">
+                            <div class="col-md-12 tab-pane fade1" id="tabs-Employee-notification" role="tabpanel">
                                 <div class="table-responsive">
                                     <table class="table table-bordered"  id="jobs">
                                         <thead>
@@ -172,15 +172,15 @@
                                                 <th>Employee Name</th>
                                                 <th>Job Code</th>
                                                 <th>Job Name</th>
-                                                <th>Job Status</th>
+                                                <th>Emp Job Status</th>
                                                 <th>Employee Comment</th>
                                                 <th>Recieved On</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="tabContent-hold">
+                                        <tbody id="tabContent-Employee">
                                         </tbody>
                                     </table>
-                                    <nav><ul id="pagination-hold" class="pagination"></ul></nav>
+                                    <nav><ul id="pagination-Employee" class="pagination"></ul></nav>
                                 </div>
                             </div>
                         </div>
@@ -284,47 +284,19 @@ $(document).ready(function () {
                 if(rdata.length === 0){
                     rows = `<tr><td colspan="7">No data found</td></tr>`;
                 } else {
+                    let i=0;
                     rdata.jobs.forEach(job => {
                         const jobDate = formatDate(job.created_at); 
+                        i++;
                         rows += `
                             <tr>
-                                <td>${job.jobcode}</td>
+                                <td>${i}</td>
+                                <td>${job.employee}</td>
+                                <td>${job.jobcode} </td>
                                 <td>${job.job_name}</td>
-                                <td><span class='badge ${job.badge_color} '>${job.status_name}</span></td>
-                                <td>${job.sub_status}</td>
-                                <td>${jobDate}</td>
-                                <td>${job.employee ?? ''}</td>
-                                <td class="actions">
-                                    <a href="<?php echo base_url('RecievedClientsJobHistories');?>/${job.jobcode}" class="btn btn-sm btn-light btn-search"><i class="fa fa-search"></i></a>
-                                    <a href="javascript:void(0);" 
-                                        class="btn btn-sm btn-light btn-folder" 
-                                        data-toggle="modal" 
-                                        data-target="#jobDetailModal" 
-                                        data-jobcode="${job.jobcode}"
-                                        data-job_name="${job.job_name}"
-                                        onclick="getJobDetails(this)">
-                                        <i class="fa fa-folder"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-sm btn-light" 
-                                        data-toggle="modal"
-                                        data-jjobcode="${job.jobcode}"
-                                        data-jjid="${job.id}"
-                                        data-target="#QassignJobModel" 
-                                        data-backdrop="static" 
-                                        data-keyboard="false">
-                                        <i class="fa fa-user-plus"></i>    
-                                    </button>
-                                    
-                                    <button type="button" class="btn btn-sm btn-light"
-                                        data-toggle="modal"
-                                        data-jjobcode = "${job.jobcode}"
-                                        data-jjid="${job.id}"
-                                        data-target="#ChangeJobStatusModel"
-                                        data-backdrop="static"
-                                        data-keyboard="false">
-                                        <i class="fa fa-check-square"></i>
-                                    </button>
-                                </td>
+                                <td>${job.emp_status_name}</td>
+                                <td>${job.message}</td>
+                                <td>${formatDateDMY(job.created_at)}</td>
                             </tr>`;
                     });
                 }
