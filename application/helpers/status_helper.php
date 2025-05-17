@@ -330,14 +330,99 @@ if (!function_exists('send_custom_email')) {
 
 
     if (!function_exists('get_assigned_employee')) {
-    function get_assigned_employee($user_ID) {
-        $CI =& get_instance();
-        $CI->load->database();
-        $sql = "SELECT * from users WHERE user_ID = ?";
-        $query = $CI->db->query($sql, array($user_ID));
-        return $query->row(); // returns array of objects
+        function get_assigned_employee($user_ID) {
+            $CI =& get_instance();
+            $CI->load->database();
+            $sql = "SELECT * from users WHERE user_ID = ?";
+            $query = $CI->db->query($sql, array($user_ID));
+            return $query->row(); // returns array of objects
+        }
     }
-}
+
+   if (!function_exists('get_userName')) {
+        function get_userName($uid)
+        {
+            $CI =& get_instance();
+            $CI->load->database();
+            $CI->db->where('user_ID', $uid);
+            $query = $CI->db->get('users');
+            return $query->row(); // Returns single row object
+        }
+    }
+
+    if (!function_exists('AdminNotify')) {
+      function AdminNotify($limit = 20, $offset = 1)
+        {
+            $CI =& get_instance(); // Get CI instance
+            $CI->load->database(); // Load DB if not loaded
+
+            // Fetch notifications with limit and offset
+            $CI->db->select('*');
+            $CI->db->from('admin_job_notifications');
+            $CI->db->order_by('admin_job_notifications.created_at', 'DESC');
+            $CI->db->limit($limit, $offset);
+            $query = $CI->db->get();
+            $notifications = $query->result();
+
+            // Count read notifications
+            $CI->db->where('is_read', 1);
+            $CI->db->where('client_id >', 0);
+            $read_count_query = $CI->db->get('admin_job_notifications');
+            $total_read_cln = $read_count_query->num_rows();
+
+            // Count read notifications
+            $CI->db->where('is_read', 1);
+            $CI->db->where('emp_id >', 0);
+            $read_count_query = $CI->db->get('admin_job_notifications');
+            $total_read_emp = $read_count_query->num_rows();
+
+            // Count unread notifications
+            $CI->db->where('is_read', 0);
+            $CI->db->where('client_id >', 0);
+            $unread_count_query = $CI->db->get('admin_job_notifications');
+            $total_unread_cln = $unread_count_query->num_rows();
+
+             // Count unread notifications
+            $CI->db->where('is_read', 0);
+            $CI->db->where('emp_id >', 0);
+            $unread_count_query = $CI->db->get('admin_job_notifications');
+            $total_unread_emp = $unread_count_query->num_rows();
+
+            // Get total count of notifications
+            $total_all = $CI->db->count_all('admin_job_notifications');
+
+            return (object)[
+                'notifications' => $notifications,
+                'total_unread_cln' => $total_unread_cln,
+                'total_unread_emp' => $total_unread_emp,
+            ];
+        }
+    }
+
+
+    if (!function_exists('get_job_query')) {
+        function get_job_query($jqid)
+        {
+            $CI =& get_instance();
+            $CI->load->database();
+            $CI->db->where('id', $jqid);
+            $query = $CI->db->get('job_query');
+            return $query->row(); // Returns single row object
+        }
+    }
+
+
+    if (!function_exists('get_job_attachments')) {
+        function get_job_attachments($jqid)
+        {
+            $CI =& get_instance();
+            $CI->load->database();
+            $CI->db->where('job_query_id', $jqid);
+            $query = $CI->db->get('job_attachments');
+            return $query->result(); // Returns single row object
+        }
+    }
+
 }
 
 

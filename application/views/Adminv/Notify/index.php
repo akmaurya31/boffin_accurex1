@@ -105,13 +105,13 @@
                         
                         <li class="nav-item">
                             <a class="nav-link <?php echo $a;?>" href="<?php echo base_url('AdminEmpNotify/Client');?>" id="tabs-client-notification">
-                                Client(s) Notification <span class="badge badge-pill text-dark bg-danger float-right"> 2</span>
+                                Client(s) Notification <span class="badge badge-pill text-dark bg-danger float-right"> <?php echo $rs->total_unread_cln; ?></span>
                             
                             </a>
                         </li>
                         
                         <li class="nav-item ">
-                            <a class="nav-link <?php echo $b;?>"  href="<?php echo base_url('AdminEmpNotify/Employee');?>" id="tabs-employee-notification">Employee (s) Notification <span class="badge badge-pill text-dark bg-danger float-right"> 1</span>
+                            <a class="nav-link <?php echo $b;?>"  href="<?php echo base_url('AdminEmpNotify/Employee');?>" id="tabs-employee-notification">Employee (s) Notification <span class="badge badge-pill text-dark bg-danger float-right"> <?php echo $rs->total_unread_emp; ?></span>
                             </a>
                         </li>
                       
@@ -144,7 +144,6 @@
                                                 <th>Client Name</th>
                                                 <th>Job Code</th>
                                                 <th>Job Name</th>
-                                                <th>Emp Job Status</th>
                                                 <th>Job Comment</th>
                                                 <th>Attachments</th>
                                                 <th>Recieved On</th>
@@ -273,7 +272,7 @@ $(document).ready(function () {
             url: "<?= base_url('AdminEmpNotify/fetch_paginated_jobs') ?>",
             method: "GET",
             data: {
-                status: tabType,
+                tabType: tabType,
                 page: page,
                 limit: 20,
                 ...searchInputs // spread search inputs into query
@@ -288,16 +287,37 @@ $(document).ready(function () {
                     rdata.jobs.forEach(job => {
                         const jobDate = formatDate(job.created_at); 
                         i++;
+                        let attachmentsHtml = '';
+                        if (Array.isArray(job.job_attachments)) {
+                            job.job_attachments.forEach((att) => {
+                                if (att.file_path) {
+                                    attachmentsHtml += `<div><a href="${att.file_path}" target="_blank">${att.file_path.split('/').pop()}</a></div>`;
+                                }
+                            });
+                        }
+                        if(tabType=='Client'){
                         rows += `
+                            <tr>
+                                <td>${i}</td>
+                                <td>${job.clientName}</td>
+                                <td>${job.jobcode} </td>
+                                <td>${job.job_name}</td>
+                                <td>${job.job_query}</td>
+                                <td>${attachmentsHtml}</td>
+                                <td>${formatDateDMY(job.created_at)}</td>
+                            </tr>`;
+                        }else if(tabType=='Employee'){
+                             rows += `
                             <tr>
                                 <td>${i}</td>
                                 <td>${job.employee}</td>
                                 <td>${job.jobcode} </td>
                                 <td>${job.job_name}</td>
                                 <td>${job.emp_status_name}</td>
-                                <td>${job.message}</td>
+                                <td>${job.message}<br/>${job.remarks ?? ''}</td>
                                 <td>${formatDateDMY(job.created_at)}</td>
                             </tr>`;
+                        }
                     });
                 }
                 $(`#tabContent-${tabType}`).html(rows);

@@ -696,6 +696,7 @@
         $noti_data=array();
         $noti_data['client_id']=$user_id;
         $noti_data['jobcode']=$job_code;
+        $noti_data['job_query_id']=$last_id;
         $noti_data['message']="Send Some documents file and commnets by";
         $noti_data['is_read']=0;
         $this->db->insert('admin_job_notifications', $noti_data);

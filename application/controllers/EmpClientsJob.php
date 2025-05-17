@@ -206,6 +206,7 @@ class EmpClientsJob extends CI_Controller {
             $noti_data['jobcode']=$jobcode;
             $noti_data['n_status']=$emp_status;
             $noti_data['message']="$jobcode change status by $user_id ,$rs->emp_status to $emp_status";
+            $noti_data['remarks']=$comments;
             $noti_data['is_read']=0;
             $this->db->insert('admin_job_notifications', $noti_data);
         }

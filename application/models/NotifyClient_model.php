@@ -141,7 +141,15 @@ class NotifyClient_model extends CI_Model {
 
      public function extra_get_filtered_jobs($limit, $offset, $filters, &$total = 0) {
         $this->db->from('admin_job_notifications');
-       
+
+        // echo $filters['status']; die("ASdf");
+        if($filters['tabType']=='Client'){
+            $this->db->where('client_id >', 0);
+        }else if($filters['tabType']=='Employee'){
+            $this->db->where('emp_id >', 0);
+        }
+        
+
         if (!empty($filters['search_code'])) {
             $label=$filters['search_code'];
             if ($label === 'Year End Account' || $label === 'YE' ) {
@@ -166,6 +174,11 @@ class NotifyClient_model extends CI_Model {
     
         $this->db->select('*');
         $this->db->from('admin_job_notifications');
+         if($filters['tabType']=='Client'){
+            $this->db->where('client_id >', 0);
+        }else if($filters['tabType']=='Employee'){
+            $this->db->where('emp_id >', 0);
+        }
     
         if (!empty($filters['search_code'])) {
             $this->db->group_start();  
@@ -432,6 +445,9 @@ class NotifyClient_model extends CI_Model {
 
     return $final;
 }
+
+
+   
 
     
     
